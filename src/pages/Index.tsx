@@ -1,4 +1,3 @@
-
 import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, Book, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +7,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
       {/* Custom CSS for floating animation */}
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%, 100% {
             transform: translateY(0px);
@@ -54,7 +53,7 @@ const Index = () => {
           {/* Floating Globe */}
           <div className="flex justify-center mb-8">
             <img 
-              src="/api/placeholder/120/120" 
+              src="/lovable-uploads/67298761-7c4b-41cc-8a98-e8456c3763d0.png" 
               alt="Pixelated Globe" 
               className="w-24 h-24 floating opacity-80"
               style={{ filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.3))' }}
