@@ -6,25 +6,25 @@ import { Badge } from "@/components/ui/badge";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
       {/* Navigation */}
-      <nav className="border-b border-white/10 bg-black/20 backdrop-blur-sm">
+      <nav className="border-b border-cyan-500/20 bg-black/40 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
                 <Code className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-white">Enact Protocol</span>
-              <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
+              <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30">
                 Alpha
               </Badge>
             </div>
             <div className="hidden md:flex items-center space-x-6">
-              <a href="#features" className="text-white/70 hover:text-white transition-colors">Features</a>
-              <a href="#examples" className="text-white/70 hover:text-white transition-colors">Examples</a>
-              <a href="#docs" className="text-white/70 hover:text-white transition-colors">Docs</a>
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+              <a href="#features" className="text-white/70 hover:text-cyan-400 transition-colors">Features</a>
+              <a href="#examples" className="text-white/70 hover:text-cyan-400 transition-colors">Examples</a>
+              <a href="#docs" className="text-white/70 hover:text-cyan-400 transition-colors">Docs</a>
+              <Button variant="outline" className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10">
                 <Github className="w-4 h-4 mr-2" />
                 GitHub
               </Button>
@@ -38,29 +38,29 @@ const Index = () => {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
             Revolutionize how AI tools are
-            <span className="bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent"> defined</span>
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> defined</span>
           </h1>
           <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
             Enact lets AI models use command-line tools safely and reliably. 
             Transform any CLI tool into an AI tool with just YAML.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white border-0">
+            <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0">
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10">
               <MessageCircle className="w-5 h-5 mr-2" />
               Join Discord
             </Button>
           </div>
           
           {/* Quick Example */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-white/10 max-w-2xl mx-auto">
+          <div className="bg-black/60 backdrop-blur-sm rounded-xl p-6 border border-cyan-500/20 max-w-2xl mx-auto">
             <div className="text-left">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-emerald-400 font-mono text-sm">tool.yaml</span>
-                <Badge variant="secondary" className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+                <span className="text-cyan-400 font-mono text-sm">tool.yaml</span>
+                <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30">
                   3 lines!
                 </Badge>
               </div>
@@ -78,7 +78,7 @@ command: "echo 'Hello, \${name}!'"`}
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-black/20">
+      <section id="features" className="py-20 bg-black/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Why Enact?</h2>
@@ -88,9 +88,9 @@ command: "echo 'Hello, \${name}!'"`}
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-black/40 border-cyan-500/20 backdrop-blur-sm hover:border-cyan-400/40 transition-colors">
               <CardHeader>
-                <Search className="w-10 h-10 text-emerald-400 mb-2" />
+                <Search className="w-10 h-10 text-cyan-400 mb-2" />
                 <CardTitle className="text-white">Discoverable</CardTitle>
               </CardHeader>
               <CardContent>
@@ -100,7 +100,7 @@ command: "echo 'Hello, \${name}!'"`}
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-black/40 border-blue-500/20 backdrop-blur-sm hover:border-blue-400/40 transition-colors">
               <CardHeader>
                 <Package className="w-10 h-10 text-blue-400 mb-2" />
                 <CardTitle className="text-white">Packaged</CardTitle>
@@ -112,7 +112,7 @@ command: "echo 'Hello, \${name}!'"`}
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-black/40 border-purple-500/20 backdrop-blur-sm hover:border-purple-400/40 transition-colors">
               <CardHeader>
                 <Shield className="w-10 h-10 text-purple-400 mb-2" />
                 <CardTitle className="text-white">Secure</CardTitle>
@@ -124,7 +124,7 @@ command: "echo 'Hello, \${name}!'"`}
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-black/40 border-yellow-400/20 backdrop-blur-sm hover:border-yellow-400/40 transition-colors">
               <CardHeader>
                 <Zap className="w-10 h-10 text-yellow-400 mb-2" />
                 <CardTitle className="text-white">Reproducible</CardTitle>
@@ -151,7 +151,7 @@ command: "echo 'Hello, \${name}!'"`}
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white font-bold text-xl">1</span>
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Define</h3>
@@ -184,7 +184,7 @@ command: "echo 'Hello, \${name}!'"`}
       </section>
 
       {/* Code Examples */}
-      <section id="examples" className="py-20 bg-black/20">
+      <section id="examples" className="py-20 bg-black/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Progressive Complexity</h2>
@@ -194,7 +194,7 @@ command: "echo 'Hello, \${name}!'"`}
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <Card className="bg-black/40 border-white/10 backdrop-blur-sm">
+            <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-500/30 mr-3">
@@ -215,7 +215,7 @@ command: "npx github:sindresorhus/slugify-cli@b4a8c2d9f '\${text}'"`}
               </CardContent>
             </Card>
 
-            <Card className="bg-black/40 border-white/10 backdrop-blur-sm">
+            <Card className="bg-black/60 border-blue-500/20 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30 mr-3">
@@ -255,10 +255,10 @@ inputSchema:
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold text-white mb-8">Get Started in Minutes</h2>
             
-            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-8 border border-white/10 text-left">
+            <div className="bg-black/60 backdrop-blur-sm rounded-xl p-8 border border-cyan-500/20 text-left">
               <div className="flex items-center justify-between mb-6">
-                <span className="text-emerald-400 font-mono text-lg">Terminal</span>
-                <Badge variant="secondary" className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+                <span className="text-cyan-400 font-mono text-lg">Terminal</span>
+                <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30">
                   3 commands
                 </Badge>
               </div>
@@ -281,7 +281,7 @@ enact publish tool.yaml`}
       </section>
 
       {/* Community & Links */}
-      <section className="py-20 bg-black/20">
+      <section className="py-20 bg-black/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-white mb-4">Join the Community</h2>
@@ -291,32 +291,32 @@ enact publish tool.yaml`}
           </div>
 
           <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 h-20 flex-col">
+            <Button variant="outline" size="lg" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10 h-20 flex-col">
               <MessageCircle className="w-6 h-6 mb-2" />
-              Discord
+              <span>Discord</span>
             </Button>
-            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 h-20 flex-col">
+            <Button variant="outline" size="lg" className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 h-20 flex-col">
               <Github className="w-6 h-6 mb-2" />
-              GitHub
+              <span>GitHub</span>
             </Button>
-            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 h-20 flex-col">
+            <Button variant="outline" size="lg" className="border-blue-400/30 text-blue-400 hover:bg-blue-400/10 h-20 flex-col">
               <Book className="w-6 h-6 mb-2" />
-              Docs
+              <span>Docs</span>
             </Button>
-            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 h-20 flex-col">
+            <Button variant="outline" size="lg" className="border-yellow-400/30 text-yellow-400 hover:bg-yellow-400/10 h-20 flex-col">
               <Star className="w-6 h-6 mb-2" />
-              Registry
+              <span>Registry</span>
             </Button>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-black/20 py-8">
+      <footer className="border-t border-cyan-500/20 bg-black/40 py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-6 h-6 bg-gradient-to-r from-emerald-400 to-blue-500 rounded"></div>
+              <div className="w-6 h-6 bg-gradient-to-r from-cyan-400 to-blue-500 rounded"></div>
               <span className="text-white font-semibold">Enact Protocol</span>
             </div>
             <div className="text-white/60 text-sm">
