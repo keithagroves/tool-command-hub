@@ -7,6 +7,21 @@ import { Badge } from "@/components/ui/badge";
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
+      {/* Custom CSS for floating animation */}
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+        .floating {
+          animation: float 4s ease-in-out infinite;
+        }
+      `}</style>
+
       {/* Navigation */}
       <nav className="border-b border-cyan-500/20 bg-black/40 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4">
@@ -34,8 +49,18 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 text-center">
+      <section className="container mx-auto px-4 py-20 text-center relative">
         <div className="max-w-4xl mx-auto">
+          {/* Floating Globe */}
+          <div className="flex justify-center mb-8">
+            <img 
+              src="/api/placeholder/120/120" 
+              alt="Pixelated Globe" 
+              className="w-24 h-24 floating opacity-80"
+              style={{ filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.3))' }}
+            />
+          </div>
+          
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
             Revolutionize how AI tools are
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> defined</span>
@@ -291,19 +316,19 @@ enact publish tool.yaml`}
           </div>
 
           <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <Button variant="outline" size="lg" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10 h-20 flex-col">
+            <Button variant="outline" size="lg" className="border-purple-400/50 text-purple-300 hover:bg-purple-400/20 hover:border-purple-300 h-20 flex-col transition-all duration-300">
               <MessageCircle className="w-6 h-6 mb-2" />
               <span>Discord</span>
             </Button>
-            <Button variant="outline" size="lg" className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 h-20 flex-col">
+            <Button variant="outline" size="lg" className="border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/20 hover:border-cyan-300 h-20 flex-col transition-all duration-300">
               <Github className="w-6 h-6 mb-2" />
               <span>GitHub</span>
             </Button>
-            <Button variant="outline" size="lg" className="border-blue-400/30 text-blue-400 hover:bg-blue-400/10 h-20 flex-col">
+            <Button variant="outline" size="lg" className="border-blue-400/50 text-blue-300 hover:bg-blue-400/20 hover:border-blue-300 h-20 flex-col transition-all duration-300">
               <Book className="w-6 h-6 mb-2" />
               <span>Docs</span>
             </Button>
-            <Button variant="outline" size="lg" className="border-yellow-400/30 text-yellow-400 hover:bg-yellow-400/10 h-20 flex-col">
+            <Button variant="outline" size="lg" className="border-yellow-400/50 text-yellow-300 hover:bg-yellow-400/20 hover:border-yellow-300 h-20 flex-col transition-all duration-300">
               <Star className="w-6 h-6 mb-2" />
               <span>Registry</span>
             </Button>
