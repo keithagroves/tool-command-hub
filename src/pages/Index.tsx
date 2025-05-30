@@ -26,19 +26,24 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
-                <Code className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-white">Enact Protocol</span>
-              <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30">
-                Alpha
-              </Badge>
+              <img
+                src="/logo.png"
+                alt="Enact Protocol Logo"
+                width={32}
+                height={32}
+                className="rounded-lg"/>
+  
+              <span className="text-xl font-bold text-gray-100">Enact Protocol</span>
+
             </div>
             <div className="hidden md:flex items-center space-x-6">
               <a href="#features" className="text-white/70 hover:text-cyan-400 transition-colors">Features</a>
               <a href="#examples" className="text-white/70 hover:text-cyan-400 transition-colors">Examples</a>
-              <a href="#docs" className="text-white/70 hover:text-cyan-400 transition-colors">Docs</a>
-              <Button variant="outline" className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10">
+              {/* <a href="#docs" className="text-white/70 hover:text-cyan-400 transition-colors">Docs</a> */}
+              <Button 
+              onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+              variant="outline" className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10">
+              
                 <Github className="w-4 h-4 mr-2" />
                 GitHub
               </Button>
@@ -60,7 +65,7 @@ const Index = () => {
             />
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold text-slate-100 mb-6 leading-tight">
             Revolutionize how AI tools are
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> defined</span>
           </h1>
@@ -73,7 +78,12 @@ const Index = () => {
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button size="lg" variant="outline" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10"
+              onClick={() => window.open('https://discord.gg/mMfxvMtHyS', '_blank')}
+            >
               <MessageCircle className="w-5 h-5 mr-2" />
               Join Discord
             </Button>
@@ -314,23 +324,22 @@ enact publish tool.yaml`}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <Button variant="outline" size="lg" className="border-purple-400/50 text-purple-300 hover:bg-purple-400/20 hover:border-purple-300 h-20 flex-col transition-all duration-300">
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="bg-purple-600 border-purple-400/50 text-cyan-400 hover:bg-purple-400/20 hover:border-purple-300 h-20 flex-col transition-all duration-300"
+              onClick={() => window.open('https://discord.gg/mMfxvMtHyS', '_blank')}
+            >
               <MessageCircle className="w-6 h-6 mb-2" />
               <span>Discord</span>
             </Button>
-            <Button variant="outline" size="lg" className="border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/20 hover:border-cyan-300 h-20 flex-col transition-all duration-300">
+            <Button onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')
+            } variant="outline" size="lg" className="bg-purple-600 border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/20 hover:border-cyan-300 h-20 flex-col transition-all duration-300">
               <Github className="w-6 h-6 mb-2" />
               <span>GitHub</span>
             </Button>
-            <Button variant="outline" size="lg" className="border-blue-400/50 text-blue-300 hover:bg-blue-400/20 hover:border-blue-300 h-20 flex-col transition-all duration-300">
-              <Book className="w-6 h-6 mb-2" />
-              <span>Docs</span>
-            </Button>
-            <Button variant="outline" size="lg" className="border-yellow-400/50 text-yellow-300 hover:bg-yellow-400/20 hover:border-yellow-300 h-20 flex-col transition-all duration-300">
-              <Star className="w-6 h-6 mb-2" />
-              <span>Registry</span>
-            </Button>
+          
           </div>
         </div>
       </section>
@@ -340,7 +349,7 @@ enact publish tool.yaml`}
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-6 h-6 bg-gradient-to-r from-cyan-400 to-blue-500 rounded"></div>
+              <img src="/logo.png" alt="Enact Protocol Logo" width={32} height={32} className="rounded-lg"/>
               <span className="text-white font-semibold">Enact Protocol</span>
             </div>
             <div className="text-white/60 text-sm">
