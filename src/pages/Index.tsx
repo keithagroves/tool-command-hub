@@ -79,7 +79,10 @@ command: "echo 'Hello, \${name}!'"`;
             Transform any CLI tool into an AI tool with just YAML.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0">
+
+            <Button onClick={() => {
+    document.getElementById('quickstart')?.scrollIntoView({ behavior: 'smooth' });
+  }} size="lg" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0">
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
@@ -279,7 +282,7 @@ inputSchema:
       </section>
 
       {/* Quick Start */}
-      <section className="py-20">
+      <section id="quickstart" className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold text-white mb-8">Get Started in Minutes</h2>
