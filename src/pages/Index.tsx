@@ -2,8 +2,13 @@ import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import TypewriterCode from "@/components/TypewriterCode";
 
 const Index = () => {
+  const yamlCode = `name: hello-world
+description: "Greets the world"
+command: "echo 'Hello, \${name}!'"`;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
       {/* Custom CSS for floating animation */}
@@ -89,22 +94,12 @@ const Index = () => {
             </Button>
           </div>
           
-          {/* Quick Example */}
-          <div className="bg-black/60 backdrop-blur-sm rounded-xl p-6 border border-cyan-500/20 max-w-2xl mx-auto">
-            <div className="text-left">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-cyan-400 font-mono text-sm">tool.yaml</span>
-                <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30">
-                  3 lines!
-                </Badge>
-              </div>
-              <pre className="text-white/90 font-mono text-sm leading-relaxed">
-{`name: hello-world
-description: "Greets the world"
-command: "echo 'Hello, \${name}!'"`}
-              </pre>
-            </div>
-          </div>
+          {/* Typewriter YAML Example */}
+          <TypewriterCode 
+            code={yamlCode}
+            title="tool.yaml"
+            badge="3 lines!"
+          />
           <p className="text-white/60 mt-4 text-sm">
             That's it! This tool can now be discovered, executed, and verified by any AI model.
           </p>
