@@ -242,7 +242,7 @@ command: "echo 'Hello, \${name}!'"`;
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
 {`name: SlugifyText
 description: "Converts text to URL-friendly slugs"
-command: "npx github:sindresorhus/slugify-cli@b4a8c2d9f '\${text}'"`}
+command: "npx slugify-cli@v3.0.0 '\${text}'"`}
                 </pre>
               </CardContent>
             </Card>
