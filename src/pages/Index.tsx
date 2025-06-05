@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import TypewriterCode from "@/components/TypewriterCode";
 
 const Index = () => {
-  const yamlCode = `name: hello-world
+  const yamlCode = `enact: 1.0.0
+name: hello-world
 description: "Greets the world"
 command: "echo 'Hello, \${name}!'"`;
 
@@ -101,7 +102,7 @@ command: "echo 'Hello, \${name}!'"`;
           <TypewriterCode 
             code={yamlCode}
             title="tool.yaml"
-            badge="3 lines!"
+            badge="4 lines!"
           />
           <p className="text-white/60 mt-4 text-sm">
             That's it! This tool can now be discovered, executed, and verified by any AI model.
@@ -240,7 +241,8 @@ command: "echo 'Hello, \${name}!'"`;
               </CardHeader>
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`name: SlugifyText
+{`enact: 1.0.0
+name: SlugifyText
 description: "Converts text to URL-friendly slugs"
 command: "npx slugify-cli@v3.0.0 '\${text}'"`}
                 </pre>
@@ -261,7 +263,8 @@ command: "npx slugify-cli@v3.0.0 '\${text}'"`}
               </CardHeader>
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`name: MarkdownToHTML
+{`enact: 1.0.0
+name: MarkdownToHTML
 description: "Converts markdown to HTML"
 command: "npx github:markdown-it/markdown-it-cli@abc123"
 timeout: "30s"
