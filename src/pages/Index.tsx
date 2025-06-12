@@ -284,36 +284,103 @@ inputSchema:
         </div>
       </section>
 
-      {/* Quick Start */}
-      <section id="quickstart" className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold text-white mb-8">Get Started in Minutes</h2>
-            
-            <div className="bg-black/60 backdrop-blur-sm rounded-xl p-8 border border-cyan-500/20 text-left">
-              <div className="flex items-center justify-between mb-6">
-                <span className="text-cyan-400 font-mono text-lg">Terminal</span>
-                <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30">
-                  3 commands
-                </Badge>
-              </div>
-              <pre className="text-white/90 font-mono leading-relaxed">
-{`# Install
-npm install -g enact-cli
+     
+      {/* === NEW: Unified Get Started & Registry Section === */}
+<section id="quickstart" className="py-20 bg-black/30">
+  <div className="container mx-auto px-4">
+    <div className="text-center mb-16">
+      <h2 className="text-4xl font-bold text-white mb-4">Enter the Enact Ecosystem</h2>
+      <p className="text-xl text-white/70 max-w-2xl mx-auto">
+        Whether you want to create new AI tools or use existing ones, you can get started in minutes.
+      </p>
+    </div>
 
-# Create your first tool
-enact init my-tool
-
-# Publish it
-enact publish tool.yaml`}
-              </pre>
-              <p className="text-white/60 mt-4 text-center">
-                Now any AI using MCP can discover and use your tool!
-              </p>
+    {/* Side-by-side cards for the two user paths */}
+    <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      
+      {/* Path 1: For Tool CONSUMERS */}
+      <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm text-left flex flex-col">
+        <CardHeader>
+          <div className="flex items-center space-x-4 mb-4">
+            <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+              <Search className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-white text-2xl">Discover & Use Tools</CardTitle>
+              <CardDescription className="text-white/70">
+                For AI developers and applications.
+              </CardDescription>
             </div>
           </div>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <p className="text-white/80 mb-6">
+            Browse the official registry to find thousands of AI-ready tools with semantic search and cryptographic verification.
+          </p>
+        </CardContent>
+        <div className="p-6 pt-0">
+          <Button
+            onClick={() => window.open('https://enact.tools', '_blank')}
+            className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0 w-full"
+          >
+            <Package className="w-5 h-5 mr-2" />
+            Explore enact.tools Registry
+          </Button>
         </div>
-      </section>
+      </Card>
+
+      {/* Path 2: For Tool CREATORS */}
+      <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm text-left flex flex-col">
+        <CardHeader>
+          <div className="flex items-center space-x-4 mb-4">
+            <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+              <Code className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-white text-2xl">Create & Publish Tools</CardTitle>
+              <CardDescription className="text-white/70">
+                For developers and tool builders.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <p className="text-white/80 mb-4">
+            Get the Enact CLI to create, validate, and publish your tools. A few commands are all it takes:
+          </p>
+          <div className="bg-slate-900/70 rounded-lg p-4 font-mono text-sm text-cyan-300">
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> npm install -g enact-cli</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact init my-awesome-tool</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact publish</p>
+          </div>
+        </CardContent>
+        <div className="p-6 pt-0">
+           <Button
+            variant="outline"
+            className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10 w-full"
+            onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+          >
+            <Book className="w-4 h-4 mr-2" />
+            View Creator Documentation
+          </Button>
+        </div>
+      </Card>
+    </div>
+    
+    <div className="text-center mt-12">
+        <p className="text-white/60 mb-4">Want to run your own private registry for your organization?</p>
+        <Button
+            variant="outline"
+            className="bg-black/20 border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
+            onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+        >
+            <Github className="w-4 h-4 mr-2" />
+            Read the Self-Hosting Guide
+        </Button>
+    </div>
+  </div>
+</section>
+     
 
       {/* Community & Links */}
       <section className="py-20 bg-black/30">
