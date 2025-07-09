@@ -8,6 +8,7 @@ const Index = () => {
   const yamlCode = `enact: 1.0.0
 name: hello-world
 description: "Greets the world"
+from: "alpine:latest"
 command: "echo 'Hello, \${name}!'"`;
 
   return (
@@ -76,7 +77,7 @@ command: "echo 'Hello, \${name}!'"`;
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> defined</span>
           </h1>
           <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-            Enact lets AI models use command-line tools safely and reliably. 
+            Enact lets AI models use command-line tools safely in isolated containers. 
             Transform any CLI tool into an AI tool with just YAML.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -102,10 +103,10 @@ command: "echo 'Hello, \${name}!'"`;
           <TypewriterCode 
             code={yamlCode}
             title="tool.yaml"
-            badge="4 lines!"
+            badge="5 lines!"
           />
           <p className="text-white/60 mt-4 text-sm">
-            That's it! This tool can now be discovered, executed, and verified by any AI model.
+            That's it! This tool runs in a secure container and can be discovered, executed, and verified by any AI model.
           </p>
         </div>
       </section>
@@ -116,7 +117,7 @@ command: "echo 'Hello, \${name}!'"`;
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Why Enact?</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Built on the Model Context Protocol (MCP) with security and reproducibility at its core
+              Built on MCP with Dagger-powered containerized execution for security and reproducibility
             </p>
           </div>
           
@@ -160,11 +161,11 @@ command: "echo 'Hello, \${name}!'"`;
             <Card className="bg-black/40 border-yellow-400/20 backdrop-blur-sm hover:border-yellow-400/40 transition-colors">
               <CardHeader>
                 <Zap className="w-10 h-10 text-yellow-400 mb-2" />
-                <CardTitle className="text-white">Reproducible</CardTitle>
+                <CardTitle className="text-white">Containerized</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-white/70">
-                  Versioned with content pinning. Same input, same output, every time.
+                  Runs in isolated Dagger containers. Reproducible execution with dependency isolation.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -209,7 +210,7 @@ command: "echo 'Hello, \${name}!'"`;
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Execute</h3>
               <p className="text-white/70">
-                AI models discover and execute your tool safely through the MCP protocol.
+                AI models discover and execute your tool safely in isolated Dagger containers.
               </p>
             </div>
           </div>
@@ -236,7 +237,7 @@ command: "echo 'Hello, \${name}!'"`;
                   Minimal Tool
                 </CardTitle>
                 <CardDescription className="text-white/70">
-                  Just 3 required fields to get started
+                  Just 4 required fields to get started
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -244,6 +245,7 @@ command: "echo 'Hello, \${name}!'"`;
 {`enact: 1.0.0
 name: SlugifyText
 description: "Converts text to URL-friendly slugs"
+from: "node:18-alpine"
 command: "npx slugify-cli@v3.0.0 '\${text}'"`}
                 </pre>
               </CardContent>
@@ -266,6 +268,7 @@ command: "npx slugify-cli@v3.0.0 '\${text}'"`}
 {`enact: 1.0.0
 name: MarkdownToHTML
 description: "Converts markdown to HTML"
+from: "node:18-alpine"
 command: "npx github:markdown-it/markdown-it-cli@abc123"
 timeout: "30s"
 tags: ["markdown", "html", "converter"]
@@ -315,7 +318,7 @@ inputSchema:
         </CardHeader>
         <CardContent className="flex-grow">
           <p className="text-white/80 mb-6">
-            Browse the official registry to find thousands of AI-ready tools with semantic search and cryptographic verification.
+            Browse the official registry to find thousands of AI-ready tools with semantic search, cryptographic verification, and safe containerized execution.
           </p>
         </CardContent>
         <div className="p-6 pt-0">
