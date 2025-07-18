@@ -25,7 +25,7 @@ That's it. This tool can now be:
 
 **Install:**
 ```bash
-npm install -g enact-cli
+npm install -g @enactprotocol/cli
 ```
 
 **Create your first tool:**

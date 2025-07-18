@@ -298,8 +298,31 @@ inputSchema:
       </p>
     </div>
 
-    {/* Side-by-side cards for the two user paths */}
-    <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+    {/* Install Section */}
+    <div className="max-w-3xl mx-auto mb-16">
+      <Card className="bg-black/60 border-yellow-400/20 backdrop-blur-sm text-center">
+        <CardHeader>
+          <CardTitle className="text-white text-2xl flex items-center justify-center">
+            <Package className="w-6 h-6 mr-3" />
+            Install the Enact CLI
+          </CardTitle>
+          <CardDescription className="text-white/70">
+            Get started with the comprehensive Enact command-line interface
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-slate-900/70 rounded-lg p-4 font-mono text-lg text-cyan-300 mb-4">
+            <p className="whitespace-pre-wrap"><span className="text-yellow-400">$</span> npm install -g @enactprotocol/cli</p>
+          </div>
+          <p className="text-white/60 text-sm">
+            Includes authentication, tool creation, publishing, discovery, execution, and MCP integration
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+
+    {/* Three-column cards for user paths */}
+    <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
       
       {/* Path 1: For Tool CONSUMERS */}
       <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm text-left flex flex-col">
@@ -309,7 +332,7 @@ inputSchema:
               <Search className="w-7 h-7 text-white" />
             </div>
             <div>
-              <CardTitle className="text-white text-2xl">Discover & Use Tools</CardTitle>
+              <CardTitle className="text-white text-xl">Discover & Use Tools</CardTitle>
               <CardDescription className="text-white/70">
                 For AI developers and applications.
               </CardDescription>
@@ -317,9 +340,14 @@ inputSchema:
           </div>
         </CardHeader>
         <CardContent className="flex-grow">
-          <p className="text-white/80 mb-6">
-            Browse the official registry to find thousands of AI-ready tools with semantic search, cryptographic verification, and safe containerized execution.
+          <p className="text-white/80 mb-4">
+            Browse the official registry or use the CLI to find and execute tools with semantic search, cryptographic verification, and safe containerized execution.
           </p>
+          <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact search "text analysis"</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact get tool-name</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact exec tool-name --input "data"</p>
+          </div>
         </CardContent>
         <div className="p-6 pt-0">
           <Button
@@ -327,12 +355,49 @@ inputSchema:
             className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0 w-full"
           >
             <Package className="w-5 h-5 mr-2" />
-            Explore enact.tools Registry
+            Explore Registry
           </Button>
         </div>
       </Card>
 
-      {/* Path 2: For Tool CREATORS */}
+      {/* Path 2: For MCP SETUP */}
+      <Card className="bg-black/60 border-green-500/20 backdrop-blur-sm text-left flex flex-col">
+        <CardHeader>
+          <div className="flex items-center space-x-4 mb-4">
+            <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+              <Zap className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-white text-xl">Setup with your MCP Client</CardTitle>
+              <CardDescription className="text-white/70">
+                For AI applications and integrations.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <p className="text-white/80 mb-4">
+            Connect Enact to your favorite AI client with one command. Supports Claude Desktop, VS Code, and more MCP-compatible applications.
+          </p>
+          <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp install --client claude-desktop</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp install --client vscode</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp status</p>
+          </div>
+        </CardContent>
+        <div className="p-6 pt-0">
+          <Button
+            variant="outline"
+            className="bg-green-500/10 border-green-400/30 text-green-300 hover:bg-green-400/20 w-full"
+            onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+          >
+            <Book className="w-4 h-4 mr-2" />
+            MCP Setup Guide
+          </Button>
+        </div>
+      </Card>
+
+      {/* Path 3: For Tool CREATORS */}
       <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm text-left flex flex-col">
         <CardHeader>
           <div className="flex items-center space-x-4 mb-4">
@@ -340,7 +405,7 @@ inputSchema:
               <Code className="w-7 h-7 text-white" />
             </div>
             <div>
-              <CardTitle className="text-white text-2xl">Create & Publish Tools</CardTitle>
+              <CardTitle className="text-white text-xl">Create & Publish Tools</CardTitle>
               <CardDescription className="text-white/70">
                 For developers and tool builders.
               </CardDescription>
@@ -349,10 +414,10 @@ inputSchema:
         </CardHeader>
         <CardContent className="flex-grow">
           <p className="text-white/80 mb-4">
-            Get the Enact CLI to create, validate, and publish your tools. A few commands are all it takes:
+            Get the Enact CLI to create, validate, and publish your tools. The CLI includes authentication, environment management, MCP integration, and more:
           </p>
-          <div className="bg-slate-900/70 rounded-lg p-4 font-mono text-sm text-cyan-300">
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> npm install -g enact-cli</p>
+          <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300">
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact auth login</p>
             <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact init my-awesome-tool</p>
             <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact publish</p>
           </div>
@@ -364,7 +429,7 @@ inputSchema:
             onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
           >
             <Book className="w-4 h-4 mr-2" />
-            View Creator Documentation
+            Creator Docs
           </Button>
         </div>
       </Card>
