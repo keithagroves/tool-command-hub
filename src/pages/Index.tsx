@@ -5,11 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import TypewriterCode from "@/components/TypewriterCode";
 
 const Index = () => {
-  const yamlCode = `enact: 1.0.0
-name: hello-world
-description: "Greets the world"
-from: "alpine:latest"
-command: "echo 'Hello, \${name}!'"`;
+  const yamlCode = `enact: "1.0.1"
+name: "acme-corp/utils/hello-world"
+description: "Simple greeting tool"
+command: "echo 'Hello \${name}!'"
+from: "alpine:latest"`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
@@ -77,8 +77,8 @@ command: "echo 'Hello, \${name}!'"`;
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> defined</span>
           </h1>
           <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-            Enact lets AI models use command-line tools safely in isolated containers. 
-            Transform any CLI tool into an AI tool with just YAML.
+            Enact lets you package, sign, and distribute tools that AI agents can safely discover and execute.
+            Build containerized tools or LLM-driven workflows with simple YAML.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
 
@@ -117,43 +117,19 @@ command: "echo 'Hello, \${name}!'"`;
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Why Enact?</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Built on MCP with Dagger-powered containerized execution for security and reproducibility
+              Secure tool execution through cryptographic signatures, semantic search, container isolation, and progressive disclosure
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="bg-black/40 border-cyan-500/20 backdrop-blur-sm hover:border-cyan-400/40 transition-colors">
-              <CardHeader>
-                <Search className="w-10 h-10 text-cyan-400 mb-2" />
-                <CardTitle className="text-white">Discoverable</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-white/70">
-                  Semantically searchable across registries. AI models can find the right tool for any task.
-                </CardDescription>
-              </CardContent>
-            </Card>
 
-            <Card className="bg-black/40 border-blue-500/20 backdrop-blur-sm hover:border-blue-400/40 transition-colors">
-              <CardHeader>
-                <Package className="w-10 h-10 text-blue-400 mb-2" />
-                <CardTitle className="text-white">Packaged</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-white/70">
-                  Consistent, executable format. Define once, run anywhere with standard YAML configuration.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="bg-black/40 border-purple-500/20 backdrop-blur-sm hover:border-purple-400/40 transition-colors">
               <CardHeader>
                 <Shield className="w-10 h-10 text-purple-400 mb-2" />
-                <CardTitle className="text-white">Secure</CardTitle>
+                <CardTitle className="text-white">Cryptographically Signed</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-white/70">
-                  Protected with cryptographic signatures and verification. Trust what you execute.
+                  Tools verified with Sigstore (Fulcio + Rekor). Multi-party signatures prevent malicious tools with immutable audit trail.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -161,11 +137,59 @@ command: "echo 'Hello, \${name}!'"`;
             <Card className="bg-black/40 border-yellow-400/20 backdrop-blur-sm hover:border-yellow-400/40 transition-colors">
               <CardHeader>
                 <Zap className="w-10 h-10 text-yellow-400 mb-2" />
-                <CardTitle className="text-white">Containerized</CardTitle>
+                <CardTitle className="text-white">Container Isolated</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-white/70">
-                  Runs in isolated Dagger containers. Reproducible execution with dependency isolation.
+                  Runs in isolated Dagger containers with BuildKit caching. Safe, reproducible execution for both code and dependencies.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-black/40 border-cyan-500/20 backdrop-blur-sm hover:border-cyan-400/40 transition-colors">
+              <CardHeader>
+                <Search className="w-10 h-10 text-cyan-400 mb-2" />
+                <CardTitle className="text-white">Semantically Discoverable</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-white/70">
+                  Natural language search vs exact names. AI agents discover tools using descriptions, not just package names.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-black/40 border-blue-500/20 backdrop-blur-sm hover:border-blue-400/40 transition-colors">
+              <CardHeader>
+                <Package className="w-10 h-10 text-blue-400 mb-2" />
+                <CardTitle className="text-white">Progressive Disclosure</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-white/70">
+                  Load content on-demand to minimize context usage. Metadata loads at startup, full content only when needed.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-black/40 border-green-500/20 backdrop-blur-sm hover:border-green-400/40 transition-colors">
+              <CardHeader>
+                <Code className="w-10 h-10 text-green-400 mb-2" />
+                <CardTitle className="text-white">Two Execution Models</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-white/70">
+                  Container-executed deterministic code OR LLM-driven instructions. Choose what fits your use case.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-black/40 border-orange-500/20 backdrop-blur-sm hover:border-orange-400/40 transition-colors">
+              <CardHeader>
+                <ArrowRight className="w-10 h-10 text-orange-400 mb-2" />
+                <CardTitle className="text-white">Local Development</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-white/70">
+                  Create tools instantly in ~/.enact/local/ without signing. Publish to registry when ready for public distribution.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -190,7 +214,7 @@ command: "echo 'Hello, \${name}!'"`;
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Define</h3>
               <p className="text-white/70">
-                Create a simple YAML file describing your tool's name, description, and command.
+                Create an enact.yaml or enact.md file describing your tool's name, description, and behavior.
               </p>
             </div>
 
@@ -217,69 +241,99 @@ command: "echo 'Hello, \${name}!'"`;
         </div>
       </section>
 
-      {/* Code Examples */}
-      <section id="examples" className="py-20 bg-black/30">
+      {/* Multi-File Applications */}
+      <section className="py-20 bg-black/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Progressive Complexity</h2>
-            <p className="text-xl text-white/70">
-              Start simple, add features as needed
+            <h2 className="text-4xl font-bold text-white mb-4">Full Applications, Not Just Scripts</h2>
+            <p className="text-xl text-white/70 max-w-2xl mx-auto">
+              Enact tools can be complete multi-file applications with dependencies, tests, and documentation
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-8">
+              <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white">Production-Grade Structure</CardTitle>
+                  <CardDescription className="text-white/70">
+                    Organize your tool like any real application
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
+{`csv-processor/
+├── enact.yaml          # Tool definition
+├── README.md           # Documentation
+├── src/
+│   ├── process.py      # Main entry point
+│   ├── validate.py     # Validation logic
+│   └── transform.py    # Transform utilities
+├── requirements.txt    # Dependencies
+└── tests/
+    └── test_process.py # Unit tests`}
+                  </pre>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white">Language Agnostic</CardTitle>
+                  <CardDescription className="text-white/70">
+                    Use any language or runtime - Python, Node.js, Go, Rust, etc.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4 text-sm">
+                    <div>
+                      <code className="text-cyan-400">from: "python:3.11-slim"</code>
+                      <p className="text-white/70 mt-1">Python with pip dependencies</p>
+                    </div>
+                    <div>
+                      <code className="text-cyan-400">from: "node:18-alpine"</code>
+                      <p className="text-white/70 mt-1">Node.js with npm packages</p>
+                    </div>
+                    <div>
+                      <code className="text-cyan-400">from: "golang:1.21"</code>
+                      <p className="text-white/70 mt-1">Go with modules</p>
+                    </div>
+                    <div>
+                      <code className="text-cyan-400">from: "rust:1.75"</code>
+                      <p className="text-white/70 mt-1">Rust with cargo</p>
+                    </div>
+                    <p className="text-white/60 text-xs mt-4 italic">
+                      Any Docker base image works - bring your entire stack
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card className="bg-gradient-to-br from-black/80 to-black/60 border-blue-500/30 backdrop-blur-sm mt-8">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
-                  <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-500/30 mr-3">
-                    Level 1
-                  </Badge>
-                  Minimal Tool
+                  <Package className="w-6 h-6 mr-3 text-blue-400" />
+                  Complete Tool Example
                 </CardTitle>
-                <CardDescription className="text-white/70">
-                  Just 4 required fields to get started
-                </CardDescription>
               </CardHeader>
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`enact: 1.0.0
-name: SlugifyText
-description: "Converts text to URL-friendly slugs"
-from: "node:18-alpine"
-command: "npx slugify-cli@v3.0.0 '\${text}'"`}
-                </pre>
-              </CardContent>
-            </Card>
+{`# enact.yaml
+enact: "1.0.1"
+name: "acme-corp/data/csv-processor"
+description: "Process and analyze CSV files"
+command: "python src/process.py --file='\${file}' --operation='\${operation}'"
+from: "python:3.11-slim"
+timeout: "2m"
 
-            <Card className="bg-black/60 border-blue-500/20 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center">
-                  <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30 mr-3">
-                    Level 2
-                  </Badge>
-                  Production Ready
-                </CardTitle>
-                <CardDescription className="text-white/70">
-                  Add validation, metadata, and examples
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`enact: 1.0.0
-name: MarkdownToHTML
-description: "Converts markdown to HTML"
-from: "node:18-alpine"
-command: "npx github:markdown-it/markdown-it-cli@abc123"
-timeout: "30s"
-tags: ["markdown", "html", "converter"]
+# The container will:
+# 1. Install dependencies from requirements.txt
+# 2. Run your command with parameters
+# 3. Return structured output
+# 4. Clean up automatically
 
-inputSchema:
-  type: object
-  properties:
-    input:
-      type: string
-      description: "Markdown content"
-  required: ["input"]`}
+# Your tool can use multiple files, import modules,
+# run tests, and work exactly like any Python app`}
                 </pre>
               </CardContent>
             </Card>
@@ -287,7 +341,267 @@ inputSchema:
         </div>
       </section>
 
-     
+      {/* Security Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Built-in Security</h2>
+            <p className="text-xl text-white/70 max-w-2xl mx-auto">
+              Multiple layers of protection ensure you can trust the tools you execute
+            </p>
+          </div>
+
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm">
+                <CardHeader>
+                  <Shield className="w-12 h-12 text-purple-400 mb-2" />
+                  <CardTitle className="text-white">Cryptographic Signing</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-white/70 space-y-2">
+                    <p>Published tools are cryptographically signed with identity-based certificates:</p>
+                    <ul className="list-disc list-inside space-y-1 text-sm">
+                      <li>Multi-party signatures via Sigstore (Fulcio + Rekor)</li>
+                      <li>Immutable transparency log for audit trail</li>
+                      <li>Real-time certificate revocation (CRL)</li>
+                      <li>Prevents tool tampering and impersonation</li>
+                    </ul>
+                  </CardDescription>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-black/60 border-yellow-500/20 backdrop-blur-sm">
+                <CardHeader>
+                  <Zap className="w-12 h-12 text-yellow-400 mb-2" />
+                  <CardTitle className="text-white">Container Isolation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-white/70 space-y-2">
+                    <p>Tools run in isolated Dagger containers for complete separation:</p>
+                    <ul className="list-disc list-inside space-y-1 text-sm">
+                      <li>No access to host filesystem (except mounted dirs)</li>
+                      <li>Resource limits enforced (memory, CPU, disk)</li>
+                      <li>Network access controlled via annotations</li>
+                      <li>Container destroyed after execution</li>
+                    </ul>
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card className="bg-gradient-to-br from-black/80 to-black/60 border-green-500/30 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Book className="w-6 h-6 mr-3 text-green-400" />
+                  Trust Boundaries
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <code className="text-green-400">~/.enact/local/</code>
+                    <p className="text-white/70 mt-2">
+                      <strong className="text-white">Fully trusted.</strong> Tools you created or explicitly installed for editing. No verification needed.
+                    </p>
+                  </div>
+                  <div>
+                    <code className="text-blue-400">~/.enact/cache/</code>
+                    <p className="text-white/70 mt-2">
+                      <strong className="text-white">Verified on download.</strong> Registry tools with checked signatures. Auto-managed.
+                    </p>
+                  </div>
+                  <div>
+                    <code className="text-purple-400">Registry</code>
+                    <p className="text-white/70 mt-2">
+                      <strong className="text-white">Public distribution.</strong> All tools signed and logged. Signatures checked before first use.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Code Examples */}
+      <section id="examples" className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Two Execution Models</h2>
+            <p className="text-xl text-white/70">
+              Container-executed for deterministic code, or LLM-driven for flexible workflows
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+            <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30 mr-3">
+                    Container-Executed
+                  </Badge>
+                </CardTitle>
+                <CardDescription className="text-white/70">
+                  Deterministic code in isolated Dagger containers
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
+{`enact: "1.0.1"
+name: "acme-corp/data/csv-processor"
+description: "Process and analyze CSV files"
+command: "python src/process.py --file='\${file}'"
+from: "python:3.11-slim"
+timeout: "2m"
+
+inputSchema:
+  type: object
+  properties:
+    file:
+      type: string
+      description: "Path to CSV file"
+    operation:
+      type: string
+      enum: ["summarize", "validate"]
+  required: ["file", "operation"]`}
+                </pre>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 border-purple-500/30 mr-3">
+                    LLM-Driven
+                  </Badge>
+                </CardTitle>
+                <CardDescription className="text-white/70">
+                  Instructions interpreted by LLM (no command field)
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
+{`---
+enact: "1.0.1"
+name: "acme-corp/brand/reviewer"
+description: "Review content for brand compliance"
+inputSchema:
+  type: object
+  properties:
+    content: {type: string}
+    type: {type: string}
+---
+
+# Brand Reviewer
+
+Review content for voice and compliance.
+
+## Process
+1. Check tone and voice
+2. Verify brand guidelines
+3. Suggest improvements
+
+See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
+                </pre>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <p className="text-white/60 text-sm max-w-3xl mx-auto">
+              <strong className="text-white/80">Container tools</strong> run deterministic code in isolation.
+              <strong className="text-white/80 ml-4">LLM tools</strong> let AI interpret instructions with progressive disclosure -
+              metadata loads at startup, full content only when invoked.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Local Development Workflow */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Local Development First</h2>
+            <p className="text-xl text-white/70 max-w-2xl mx-auto">
+              Create and test tools instantly in <code className="text-cyan-400">~/.enact/local/</code> without signing.
+              Publish to the registry when ready for public distribution.
+            </p>
+          </div>
+
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <Card className="bg-black/60 border-green-500/20 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white text-lg">Local Tools</CardTitle>
+                  <code className="text-green-400 text-sm">~/.enact/local/</code>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-white/70">
+                    Tools you create and edit. No signing required. Changes are instant. Perfect for development and internal tools.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-black/60 border-blue-500/20 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white text-lg">Cache</CardTitle>
+                  <code className="text-blue-400 text-sm">~/.enact/cache/</code>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-white/70">
+                    Downloaded registry tools. Auto-managed for performance. Verified signatures. Updated automatically.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white text-lg">Registry</CardTitle>
+                  <code className="text-purple-400 text-sm">enact.tools</code>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-white/70">
+                    Public distribution. Cryptographically signed. Semantically searchable. Versioned and immutable.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card className="bg-gradient-to-br from-black/80 to-black/60 border-cyan-500/30 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white">Quick Start Example</CardTitle>
+                <CardDescription className="text-white/70">
+                  Create a local tool in seconds, no authentication needed
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
+{`# Create local tool directory
+$ mkdir -p ~/.enact/local/myorg/utils/hello/latest
+
+# Write tool definition
+$ cat > ~/.enact/local/myorg/utils/hello/latest/enact.yaml <<EOF
+enact: "1.0.1"
+name: "myorg/utils/hello"
+description: "Simple greeting tool"
+command: "echo 'Hello \${name}!'"
+EOF
+
+# Use immediately (no install/signing needed)
+$ enact exec myorg/utils/hello --name="World"
+Hello World!
+
+# Iterate freely - changes are instant
+$ vim ~/.enact/local/myorg/utils/hello/latest/enact.yaml
+$ enact exec myorg/utils/hello --name="Alice"`}
+                </pre>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* === NEW: Unified Get Started & Registry Section === */}
 <section id="quickstart" className="py-20 bg-black/30">
   <div className="container mx-auto px-4">
@@ -345,7 +659,7 @@ inputSchema:
           </p>
           <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
             <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact search "text analysis"</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact get tool-name</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact install tool-name</p>
             <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact exec tool-name --input "data"</p>
           </div>
         </CardContent>
