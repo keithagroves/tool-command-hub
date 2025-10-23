@@ -359,7 +359,7 @@ timeout: "2m"
                   <CardTitle className="text-white">Cryptographic Signing</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-white/70 space-y-2">
+                  <div className="text-white/70 space-y-2">
                     <p>Published tools are cryptographically signed with identity-based certificates:</p>
                     <ul className="list-disc list-inside space-y-1 text-sm">
                       <li>Multi-party signatures via Sigstore (Fulcio + Rekor)</li>
@@ -367,7 +367,7 @@ timeout: "2m"
                       <li>Real-time certificate revocation (CRL)</li>
                       <li>Prevents tool tampering and impersonation</li>
                     </ul>
-                  </CardDescription>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -377,7 +377,7 @@ timeout: "2m"
                   <CardTitle className="text-white">Container Isolation</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-white/70 space-y-2">
+                  <div className="text-white/70 space-y-2">
                     <p>Tools run in isolated Dagger containers for complete separation:</p>
                     <ul className="list-disc list-inside space-y-1 text-sm">
                       <li>No access to host filesystem (except mounted dirs)</li>
@@ -385,7 +385,7 @@ timeout: "2m"
                       <li>Network access controlled via annotations</li>
                       <li>Container destroyed after execution</li>
                     </ul>
-                  </CardDescription>
+                  </div>
                 </CardContent>
               </Card>
             </div>
