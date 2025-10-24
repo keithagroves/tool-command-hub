@@ -5,11 +5,17 @@ import { Badge } from "@/components/ui/badge";
 import TypewriterCode from "@/components/TypewriterCode";
 
 const Index = () => {
-  const yamlCode = `enact: "1.0.1"
+  const yamlCode = `---
+enact: "1.0.1"
 name: "acme-corp/utils/hello-world"
 description: "Simple greeting tool"
 command: "echo 'Hello \${name}!'"
-from: "alpine:latest"`;
+from: "alpine:latest"
+---
+
+# Hello World Tool
+
+Simple greeting tool for demonstrations.`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
@@ -100,13 +106,13 @@ from: "alpine:latest"`;
           </div>
           
           {/* Typewriter YAML Example */}
-          <TypewriterCode 
+          <TypewriterCode
             code={yamlCode}
-            title="tool.yaml"
-            badge="5 lines!"
+            title="enact.md"
+            badge="One file!"
           />
           <p className="text-white/60 mt-4 text-sm">
-            That's it! This tool runs in a secure container and can be discovered, executed, and verified by any AI model.
+            That's it! One markdown file with YAML frontmatter. This tool runs in a secure container and can be discovered, executed, and verified by any AI model.
           </p>
         </div>
       </section>
@@ -173,11 +179,11 @@ from: "alpine:latest"`;
             <Card className="bg-black/40 border-green-500/20 backdrop-blur-sm hover:border-green-400/40 transition-colors">
               <CardHeader>
                 <Code className="w-10 h-10 text-green-400 mb-2" />
-                <CardTitle className="text-white">Two Execution Models</CardTitle>
+                <CardTitle className="text-white">Executable & Instructional</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-white/70">
-                  Container-executed deterministic code OR LLM-driven instructions. Choose what fits your use case.
+                  Add a command field to make tools executable. Without it, tools provide instructions for LLMs to follow.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -214,7 +220,7 @@ from: "alpine:latest"`;
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Define</h3>
               <p className="text-white/70">
-                Create an enact.yaml or enact.md file describing your tool's name, description, and behavior.
+                Create an enact.md file with YAML frontmatter describing your tool's metadata and markdown body for documentation.
               </p>
             </div>
 
@@ -263,8 +269,7 @@ from: "alpine:latest"`;
                 <CardContent>
                   <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
 {`csv-processor/
-├── enact.yaml          # Tool definition
-├── README.md           # Documentation
+├── enact.md            # Tool definition & docs
 ├── src/
 │   ├── process.py      # Main entry point
 │   ├── validate.py     # Validation logic
@@ -318,22 +323,27 @@ from: "alpine:latest"`;
               </CardHeader>
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`# enact.yaml
+{`---
 enact: "1.0.1"
 name: "acme-corp/data/csv-processor"
 description: "Process and analyze CSV files"
 command: "python src/process.py --file='\${file}' --operation='\${operation}'"
 from: "python:3.11-slim"
 timeout: "2m"
+---
 
-# The container will:
-# 1. Install dependencies from requirements.txt
-# 2. Run your command with parameters
-# 3. Return structured output
-# 4. Clean up automatically
+# CSV Processor
 
-# Your tool can use multiple files, import modules,
-# run tests, and work exactly like any Python app`}
+Process and analyze CSV files with validation and transformation.
+
+The container will:
+1. Install dependencies from requirements.txt
+2. Run your command with parameters
+3. Return structured output
+4. Clean up automatically
+
+Your tool can use multiple files, import modules,
+run tests, and work exactly like any Python app.`}
                 </pre>
               </CardContent>
             </Card>
@@ -428,9 +438,9 @@ timeout: "2m"
       <section id="examples" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Two Execution Models</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Executable & Instructional Tools</h2>
             <p className="text-xl text-white/70">
-              Container-executed for deterministic code, or LLM-driven for flexible workflows
+              Tools with a command field can be executed by Enact in containers. All tools provide instructions, but only executable tools run code through Enact.
             </p>
           </div>
 
@@ -439,16 +449,17 @@ timeout: "2m"
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30 mr-3">
-                    Container-Executed
+                    Executable
                   </Badge>
                 </CardTitle>
                 <CardDescription className="text-white/70">
-                  Deterministic code in isolated Dagger containers
+                  Has a command field - runs code in isolated containers via Enact
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`enact: "1.0.1"
+{`---
+enact: "1.0.1"
 name: "acme-corp/data/csv-processor"
 description: "Process and analyze CSV files"
 command: "python src/process.py --file='\${file}'"
@@ -464,7 +475,12 @@ inputSchema:
     operation:
       type: string
       enum: ["summarize", "validate"]
-  required: ["file", "operation"]`}
+  required: ["file", "operation"]
+---
+
+# CSV Processor
+
+Deterministic CSV processing in isolated containers.`}
                 </pre>
               </CardContent>
             </Card>
@@ -473,11 +489,11 @@ inputSchema:
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 border-purple-500/30 mr-3">
-                    LLM-Driven
+                    Instructional
                   </Badge>
                 </CardTitle>
                 <CardDescription className="text-white/70">
-                  Instructions interpreted by LLM (no command field)
+                  No command field - provides instructions for LLMs to interpret
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -510,9 +526,9 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
 
           <div className="text-center">
             <p className="text-white/60 text-sm max-w-3xl mx-auto">
-              <strong className="text-white/80">Container tools</strong> run deterministic code in isolation.
-              <strong className="text-white/80 ml-4">LLM tools</strong> let AI interpret instructions with progressive disclosure -
-              metadata loads at startup, full content only when invoked.
+              <strong className="text-white/80">Executable tools</strong> run code through Enact in isolated containers.
+              <strong className="text-white/80 ml-4">Instructional tools</strong> provide instructions that LLMs read and interpret.
+              Both types support progressive disclosure - metadata loads at startup, full content only when needed.
             </p>
           </div>
         </div>
@@ -581,11 +597,17 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
 $ mkdir -p ~/.enact/local/myorg/utils/hello/latest
 
 # Write tool definition
-$ cat > ~/.enact/local/myorg/utils/hello/latest/enact.yaml <<EOF
+$ cat > ~/.enact/local/myorg/utils/hello/latest/enact.md <<EOF
+---
 enact: "1.0.1"
 name: "myorg/utils/hello"
 description: "Simple greeting tool"
 command: "echo 'Hello \${name}!'"
+---
+
+# Hello Tool
+
+Simple greeting tool for demonstrations.
 EOF
 
 # Use immediately (no install/signing needed)
@@ -593,7 +615,7 @@ $ enact exec myorg/utils/hello --name="World"
 Hello World!
 
 # Iterate freely - changes are instant
-$ vim ~/.enact/local/myorg/utils/hello/latest/enact.yaml
+$ vim ~/.enact/local/myorg/utils/hello/latest/enact.md
 $ enact exec myorg/utils/hello --name="Alice"`}
                 </pre>
               </CardContent>
