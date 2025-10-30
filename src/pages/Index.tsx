@@ -7,7 +7,7 @@ import TypewriterCode from "@/components/TypewriterCode";
 const Index = () => {
   const yamlCode = `---
 name: "username/utils/hello-world"
-description: "Greets the user"
+description: "Greets the world"
 command: "echo 'Hello, World!'"
 ---
 
