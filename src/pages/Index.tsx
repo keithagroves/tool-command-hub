@@ -6,20 +6,14 @@ import TypewriterCode from "@/components/TypewriterCode";
 
 const Index = () => {
   const yamlCode = `---
-enact: "1.0.1"
-name: "username/utils/greeter"
-description: "Greets the user by name"
-command: "echo 'Hello, \${name}!'"
-inputSchema:
-  type: object
-  properties:
-    name: {type: string}
-  required: ["name"]
+name: "username/utils/hello-world"
+description: "Greets the user"
+command: "echo 'Hello, World!'"
 ---
 
-# Greeter
+# Hello World
 
-A simple tool that greets users by name.`;
+A simple tool that says hello world.`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
