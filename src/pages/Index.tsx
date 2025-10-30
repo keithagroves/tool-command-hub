@@ -326,32 +326,54 @@ A simple tool that greets users by name.`;
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`---
-enact: "1.0.1"
-name: "acme-corp/data/csv-processor"
-description: "Process and analyze CSV files"
-version: "1.2.3"
-command: "python src/process.py --file='\${file}' --operation='\${operation}'"
-from: "python:3.11-slim"
-timeout: "2m"
-license: "MIT"
-tags: ["csv", "data", "processing"]
----
+                <div className="font-mono text-sm leading-relaxed overflow-x-auto">
+                  <div className="text-purple-400 mb-2">---</div>
+                  <div className="mb-1">
+                    <span className="text-cyan-400">enact:</span> <span className="text-emerald-300">"1.0.1"</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-cyan-400">name:</span> <span className="text-emerald-300">"acme-corp/data/csv-processor"</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-cyan-400">description:</span> <span className="text-emerald-300">"Process and analyze CSV files"</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-cyan-400">version:</span> <span className="text-emerald-300">"1.2.3"</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-cyan-400">command:</span> <span className="text-emerald-300">"python src/process.py --file='${"$"}{"{"}file{"}"}' --operation='${"$"}{"{"}operation{"}"}'</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-cyan-400">from:</span> <span className="text-emerald-300">"python:3.11-slim"</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-cyan-400">timeout:</span> <span className="text-emerald-300">"2m"</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-cyan-400">license:</span> <span className="text-emerald-300">"MIT"</span>
+                  </div>
+                  <div className="mb-2">
+                    <span className="text-cyan-400">tags:</span> <span className="text-white/70">[</span><span className="text-emerald-300">"csv"</span><span className="text-white/70">, </span><span className="text-emerald-300">"data"</span><span className="text-white/70">, </span><span className="text-emerald-300">"processing"</span><span className="text-white/70">]</span>
+                  </div>
+                  <div className="text-purple-400 mb-4">---</div>
 
-# CSV Processor
+                  <div className="text-blue-400 text-lg mb-3"># CSV Processor</div>
 
-Process and analyze CSV files with validation and transformation.
+                  <div className="text-white/80 mb-4">
+                    Process and analyze CSV files with validation and transformation.
+                  </div>
 
-The container will:
-1. Install dependencies from requirements.txt
-2. Run your command with parameters
-3. Return structured output
-4. Clean up automatically
+                  <div className="text-white/80 mb-2">The container will:</div>
+                  <div className="text-white/70 mb-1">1. Install dependencies from requirements.txt</div>
+                  <div className="text-white/70 mb-1">2. Run your command with parameters</div>
+                  <div className="text-white/70 mb-1">3. Return structured output</div>
+                  <div className="text-white/70 mb-4">4. Clean up automatically</div>
 
-Your tool can use multiple files, import modules,
-run tests, and work exactly like any Python app.`}
-                </pre>
+                  <div className="text-white/70">
+                    Your tool can use multiple files, import modules,<br/>
+                    run tests, and work exactly like any Python app.
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -593,25 +615,51 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`# Create a new tool
-$ enact init username/utils/greeter
+                <div className="font-mono text-sm leading-relaxed overflow-x-auto">
+                  <div className="mb-3">
+                    <span className="text-green-400"># Create a new tool</span>
+                  </div>
+                  <div className="mb-4">
+                    <span className="text-purple-400">$</span> <span className="text-cyan-300">enact init username/utils/greeter</span>
+                  </div>
 
-# Edit enact.md with your tool definition
-$ cd username-utils-greeter
-$ vim enact.md
+                  <div className="mb-3">
+                    <span className="text-green-400"># Edit enact.md with your tool definition</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-purple-400">$</span> <span className="text-cyan-300">cd username-utils-greeter</span>
+                  </div>
+                  <div className="mb-4">
+                    <span className="text-purple-400">$</span> <span className="text-cyan-300">vim enact.md</span>
+                  </div>
 
-# Test locally (no install needed)
-$ enact run . --args '{"name":"World"}'
-Hello, World!
+                  <div className="mb-3">
+                    <span className="text-green-400"># Test locally (no install needed)</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-purple-400">$</span> <span className="text-cyan-300">enact run . --args </span><span className="text-yellow-300">'{"{"}"name":"World"{"}"}'</span>
+                  </div>
+                  <div className="mb-4 text-white/70">
+                    Hello, World!
+                  </div>
 
-# Install globally when ready
-$ enact install . --global
+                  <div className="mb-3">
+                    <span className="text-green-400"># Install globally when ready</span>
+                  </div>
+                  <div className="mb-4">
+                    <span className="text-purple-400">$</span> <span className="text-cyan-300">enact install . --global</span>
+                  </div>
 
-# Run from anywhere
-$ enact run username/utils/greeter --args '{"name":"Alice"}'
-Hello, Alice!`}
-                </pre>
+                  <div className="mb-3">
+                    <span className="text-green-400"># Run from anywhere</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="text-purple-400">$</span> <span className="text-cyan-300">enact run username/utils/greeter --args </span><span className="text-yellow-300">'{"{"}"name":"Alice"{"}"}'</span>
+                  </div>
+                  <div className="text-white/70">
+                    Hello, Alice!
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
