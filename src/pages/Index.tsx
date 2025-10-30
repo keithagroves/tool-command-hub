@@ -7,15 +7,19 @@ import TypewriterCode from "@/components/TypewriterCode";
 const Index = () => {
   const yamlCode = `---
 enact: "1.0.1"
-name: "acme-corp/utils/hello-world"
-description: "Simple greeting tool"
-command: "echo 'Hello \${name}!'"
-from: "alpine:latest"
+name: "username/utils/greeter"
+description: "Greets the user by name"
+command: "echo 'Hello, \${name}!'"
+inputSchema:
+  type: object
+  properties:
+    name: {type: string}
+  required: ["name"]
 ---
 
-# Hello World Tool
+# Greeter
 
-Simple greeting tool for demonstrations.`;
+A simple tool that greets users by name.`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
@@ -52,11 +56,11 @@ Simple greeting tool for demonstrations.`;
             <div className="hidden md:flex items-center space-x-6">
               <a href="#features" className="text-white/70 hover:text-cyan-400 transition-colors">Features</a>
               <a href="#examples" className="text-white/70 hover:text-cyan-400 transition-colors">Examples</a>
-              {/* <a href="#docs" className="text-white/70 hover:text-cyan-400 transition-colors">Docs</a> */}
-              <Button 
+              <a href="/docs" className="text-white/70 hover:text-cyan-400 transition-colors">Docs</a>
+              <Button
               onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
               variant="outline" className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10">
-              
+
                 <Github className="w-4 h-4 mr-2" />
                 GitHub
               </Button>
@@ -327,9 +331,12 @@ Simple greeting tool for demonstrations.`;
 enact: "1.0.1"
 name: "acme-corp/data/csv-processor"
 description: "Process and analyze CSV files"
+version: "1.2.3"
 command: "python src/process.py --file='\${file}' --operation='\${operation}'"
 from: "python:3.11-slim"
 timeout: "2m"
+license: "MIT"
+tags: ["csv", "data", "processing"]
 ---
 
 # CSV Processor
@@ -410,21 +417,21 @@ run tests, and work exactly like any Python app.`}
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-4 text-sm">
                   <div>
-                    <code className="text-green-400">~/.enact/local/</code>
+                    <code className="text-green-400">~/.enact/tools/</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">Fully trusted.</strong> Tools you created or explicitly installed for editing. No verification needed.
+                      <strong className="text-white">User-level tools.</strong> Tools installed with --global flag. Can be customized locally. No verification needed.
                     </p>
                   </div>
                   <div>
                     <code className="text-blue-400">~/.enact/cache/</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">Verified on download.</strong> Registry tools with checked signatures. Auto-managed.
+                      <strong className="text-white">Verified on download.</strong> Immutable versioned bundles with checked signatures. Auto-managed.
                     </p>
                   </div>
                   <div>
                     <code className="text-purple-400">Registry</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">Public distribution.</strong> All tools signed and logged. Signatures checked before first use.
+                      <strong className="text-white">Public distribution.</strong> All tools signed and logged. Signatures verified before execution.
                     </p>
                   </div>
                 </div>
@@ -462,10 +469,9 @@ run tests, and work exactly like any Python app.`}
 enact: "1.0.1"
 name: "acme-corp/data/csv-processor"
 description: "Process and analyze CSV files"
-command: "python src/process.py --file='\${file}'"
+command: "python src/process.py --file='\${file}' --operation='\${operation}'"
 from: "python:3.11-slim"
 timeout: "2m"
-
 inputSchema:
   type: object
   properties:
@@ -538,10 +544,10 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Local Development First</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Tool Installation Levels</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Create and test tools instantly in <code className="text-cyan-400">~/.enact/local/</code> without signing.
-              Publish to the registry when ready for public distribution.
+              Install tools project-level (like npm install) or user-level (like npm install -g).
+              Develop locally then publish to the registry when ready.
             </p>
           </div>
 
@@ -549,36 +555,36 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <Card className="bg-black/60 border-green-500/20 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white text-lg">Local Tools</CardTitle>
-                  <code className="text-green-400 text-sm">~/.enact/local/</code>
+                  <CardTitle className="text-white text-lg">Project Tools</CardTitle>
+                  <code className="text-green-400 text-sm">.enact/</code>
                 </CardHeader>
                 <CardContent>
                   <CardDescription className="text-white/70">
-                    Tools you create and edit. No signing required. Changes are instant. Perfect for development and internal tools.
+                    Tools installed for your project. Shared via .enact/tools.json. Team members sync with `enact install`.
                   </CardDescription>
                 </CardContent>
               </Card>
 
               <Card className="bg-black/60 border-blue-500/20 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white text-lg">Cache</CardTitle>
-                  <code className="text-blue-400 text-sm">~/.enact/cache/</code>
+                  <CardTitle className="text-white text-lg">User Tools</CardTitle>
+                  <code className="text-blue-400 text-sm">~/.enact/tools/</code>
                 </CardHeader>
                 <CardContent>
                   <CardDescription className="text-white/70">
-                    Downloaded registry tools. Auto-managed for performance. Verified signatures. Updated automatically.
+                    Tools installed globally with --global. Available across all projects. Can be customized locally.
                   </CardDescription>
                 </CardContent>
               </Card>
 
               <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white text-lg">Registry</CardTitle>
-                  <code className="text-purple-400 text-sm">enact.tools</code>
+                  <CardTitle className="text-white text-lg">Cache</CardTitle>
+                  <code className="text-purple-400 text-sm">~/.enact/cache/</code>
                 </CardHeader>
                 <CardContent>
                   <CardDescription className="text-white/70">
-                    Public distribution. Cryptographically signed. Semantically searchable. Versioned and immutable.
+                    Immutable versioned bundles. Auto-managed. Enables instant reinstall and reproducible builds.
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -588,35 +594,43 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
               <CardHeader>
                 <CardTitle className="text-white">Quick Start Example</CardTitle>
                 <CardDescription className="text-white/70">
-                  Create a local tool in seconds, no authentication needed
+                  Create and install a tool in seconds
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`# Create local tool directory
-$ mkdir -p ~/.enact/local/myorg/utils/hello/latest
+{`# Create tool directory
+$ mkdir my-tool && cd my-tool
 
 # Write tool definition
-$ cat > ~/.enact/local/myorg/utils/hello/latest/enact.md <<EOF
+$ cat > enact.md <<'EOF'
 ---
 enact: "1.0.1"
-name: "myorg/utils/hello"
-description: "Simple greeting tool"
-command: "echo 'Hello \${name}!'"
+name: "username/utils/greeter"
+description: "Greets the user by name"
+command: "echo 'Hello, \${name}!'"
+inputSchema:
+  type: object
+  properties:
+    name: {type: string}
+  required: ["name"]
 ---
 
-# Hello Tool
+# Greeter
 
-Simple greeting tool for demonstrations.
+A simple tool that greets users by name.
 EOF
 
-# Use immediately (no install/signing needed)
-$ enact exec myorg/utils/hello --name="World"
-Hello World!
+# Test locally (no install needed)
+$ enact run . --args '{"name":"World"}'
+Hello, World!
 
-# Iterate freely - changes are instant
-$ vim ~/.enact/local/myorg/utils/hello/latest/enact.md
-$ enact exec myorg/utils/hello --name="Alice"`}
+# Install globally when ready
+$ enact install . --global
+# Installs to ~/.enact/tools/username/utils/greeter/
+
+# Run from anywhere
+$ enact run username/utils/greeter --args '{"name":"Alice"}'`}
                 </pre>
               </CardContent>
             </Card>
@@ -681,8 +695,8 @@ $ enact exec myorg/utils/hello --name="Alice"`}
           </p>
           <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
             <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact search "text analysis"</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact install tool-name</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact exec tool-name --input "data"</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact install org/cat/tool</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact run org/cat/tool --args '{"{}"}'</p>
           </div>
         </CardContent>
         <div className="p-6 pt-0">
@@ -750,12 +764,12 @@ $ enact exec myorg/utils/hello --name="Alice"`}
         </CardHeader>
         <CardContent className="flex-grow">
           <p className="text-white/80 mb-4">
-            Get the Enact CLI to create, validate, and publish your tools. The CLI includes authentication, environment management, MCP integration, and more:
+            Get the Enact CLI to create, test, and publish your tools. The CLI includes authentication, environment management, MCP integration, and more:
           </p>
           <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300">
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact auth login</p>
             <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact init my-awesome-tool</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact publish</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact auth login</p>
+            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact publish ./my-awesome-tool/</p>
           </div>
         </CardContent>
         <div className="p-6 pt-0">
