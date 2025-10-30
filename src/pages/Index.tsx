@@ -508,11 +508,6 @@ Deterministic CSV processing in isolated containers.`}
 enact: "1.0.1"
 name: "acme-corp/brand/reviewer"
 description: "Review content for brand compliance"
-inputSchema:
-  type: object
-  properties:
-    content: {type: string}
-    type: {type: string}
 ---
 
 # Brand Reviewer
@@ -599,27 +594,12 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
               </CardHeader>
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
-{`# Create tool directory
-$ mkdir my-tool && cd my-tool
+{`# Create a new tool
+$ enact init username/utils/greeter
 
-# Write tool definition
-$ cat > enact.md <<'EOF'
----
-enact: "1.0.1"
-name: "username/utils/greeter"
-description: "Greets the user by name"
-command: "echo 'Hello, \${name}!'"
-inputSchema:
-  type: object
-  properties:
-    name: {type: string}
-  required: ["name"]
----
-
-# Greeter
-
-A simple tool that greets users by name.
-EOF
+# Edit enact.md with your tool definition
+$ cd username-utils-greeter
+$ vim enact.md
 
 # Test locally (no install needed)
 $ enact run . --args '{"name":"World"}'
@@ -627,10 +607,10 @@ Hello, World!
 
 # Install globally when ready
 $ enact install . --global
-# Installs to ~/.enact/tools/username/utils/greeter/
 
 # Run from anywhere
-$ enact run username/utils/greeter --args '{"name":"Alice"}'`}
+$ enact run username/utils/greeter --args '{"name":"Alice"}'
+Hello, Alice!`}
                 </pre>
               </CardContent>
             </Card>
