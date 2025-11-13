@@ -864,7 +864,7 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
           <div className="max-w-2xl mx-auto text-center">
             <Mail className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Stay Updated
+              Join the Enact Private Beta.
             </h2>
             <p className="text-lg text-white/70 mb-8">
               Be the first to know about new features, tools, and updates to Enact Protocol.
