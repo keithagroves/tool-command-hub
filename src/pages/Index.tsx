@@ -1,10 +1,53 @@
-import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, Book, Star } from "lucide-react";
+import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, Book, Star, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import TypewriterCode from "@/components/TypewriterCode";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const [email, setEmail] = useState("");
+  const { toast } = useToast();
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('https://xjnhhxwxovjifdxdwzih.supabase.co/functions/v1/email-signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Thanks for signing up!",
+          description: "We'll keep you updated on Enact Protocol.",
+        });
+        setEmail("");
+      } else {
+        toast({
+          title: "Signup failed",
+          description: data.error || "Something went wrong. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      toast({
+        title: "Signup failed",
+        description: "Unable to connect. Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
   const yamlCode = `---
 name: "username/utils/hello-world"
 description: "Greets the world"
@@ -660,8 +703,7 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
         </div>
       </section>
 
-      {/* === NEW: Unified Get Started & Registry Section === */}
-<section id="quickstart" className="py-20 bg-black/30">
+{/* <section id="quickstart" className="py-20 bg-black/30">
   <div className="container mx-auto px-4">
     <div className="text-center mb-16">
       <h2 className="text-4xl font-bold text-white mb-4">Enter the Enact Ecosystem</h2>
@@ -670,7 +712,6 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
       </p>
     </div>
 
-    {/* Install Section */}
     <div className="max-w-3xl mx-auto mb-16">
       <Card className="bg-black/60 border-yellow-400/20 backdrop-blur-sm text-center">
         <CardHeader>
@@ -693,10 +734,8 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
       </Card>
     </div>
 
-    {/* Three-column cards for user paths */}
     <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
       
-      {/* Path 1: For Tool CONSUMERS */}
       <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm text-left flex flex-col">
         <CardHeader>
           <div className="flex items-center space-x-4 mb-4">
@@ -732,7 +771,6 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
         </div>
       </Card>
 
-      {/* Path 2: For MCP SETUP */}
       <Card className="bg-black/60 border-green-500/20 backdrop-blur-sm text-left flex flex-col">
         <CardHeader>
           <div className="flex items-center space-x-4 mb-4">
@@ -769,7 +807,6 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
         </div>
       </Card>
 
-      {/* Path 3: For Tool CREATORS */}
       <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm text-left flex flex-col">
         <CardHeader>
           <div className="flex items-center space-x-4 mb-4">
@@ -819,8 +856,42 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
         </Button>
     </div>
   </div>
-</section>
-     
+</section> */}
+
+      {/* Sign Up Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto text-center">
+            <Mail className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Stay Updated
+            </h2>
+            <p className="text-lg text-white/70 mb-8">
+              Be the first to know about new features, tools, and updates to Enact Protocol.
+            </p>
+            <form onSubmit={handleSignup} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-black/40 border-cyan-500/30 text-white placeholder:text-white/40 focus:border-cyan-400"
+              />
+              <Button
+                type="submit"
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0 whitespace-nowrap"
+              >
+                Sign Up
+              </Button>
+            </form>
+            <p className="text-white/50 text-xs mt-4">
+              We respect your privacy. Unsubscribe at any time.
+            </p>
+          </div>
+        </div>
+      </section>
+
 
       {/* Community & Links */}
       <section className="py-20 bg-black/30">
