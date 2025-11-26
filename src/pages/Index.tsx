@@ -1,4 +1,4 @@
-import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, Book, Star, Mail } from "lucide-react";
+import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, Book, Star, Mail, Menu, X, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,15 @@ import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [email, setEmail] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +57,7 @@ const Index = () => {
     }
   };
   const yamlCode = `---
+enact: "2.0.0"
 name: "username/utils/hello-world"
 description: "Greets the world"
 command: "echo 'Hello, World!'"
@@ -60,23 +69,8 @@ A simple tool that says hello world.`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
-      {/* Custom CSS for floating animation */}
-      <style>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-        .floating {
-          animation: float 4s ease-in-out infinite;
-        }
-      `}</style>
-
       {/* Navigation */}
-      <nav className="border-b border-cyan-500/20 bg-black/40 backdrop-blur-md">
+      <nav className="border-b border-cyan-500/20 bg-black/40 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -88,33 +82,93 @@ A simple tool that says hello world.`;
                 className="rounded-lg"/>
   
               <span className="text-xl font-bold text-gray-100">Enact Protocol</span>
-
             </div>
+            
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <a href="#features" className="text-white/70 hover:text-cyan-400 transition-colors">Features</a>
               <a href="#examples" className="text-white/70 hover:text-cyan-400 transition-colors">Examples</a>
               <a href="/docs" className="text-white/70 hover:text-cyan-400 transition-colors">Docs</a>
               <Button
-              onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
-              variant="outline" className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10">
-
+                onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+                variant="outline" 
+                className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10"
+              >
                 <Github className="w-4 h-4 mr-2" />
                 GitHub
               </Button>
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-white p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
+
+          {/* Mobile Navigation */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-cyan-500/20 pt-4">
+              <div className="flex flex-col space-y-4">
+                <a 
+                  href="#features" 
+                  className="text-white/70 hover:text-cyan-400 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Features
+                </a>
+                <a 
+                  href="#examples" 
+                  className="text-white/70 hover:text-cyan-400 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Examples
+                </a>
+                <a 
+                  href="/docs" 
+                  className="text-white/70 hover:text-cyan-400 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Docs
+                </a>
+                <Button
+                  onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+                  variant="outline" 
+                  className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10 w-full"
+                >
+                  <Github className="w-4 h-4 mr-2" />
+                  GitHub
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center relative">
         <div className="max-w-4xl mx-auto">
+          {/* GitHub Stars Badge */}
+          <a 
+            href="https://github.com/EnactProtocol/encat-spec-and-tools" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-black/40 border border-cyan-500/30 rounded-full px-4 py-2 mb-6 hover:border-cyan-400/50 transition-colors"
+          >
+            <Github className="w-4 h-4 text-white" />
+            <span className="text-white/80 text-sm">Star us on GitHub</span>
+            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+          </a>
+
           {/* Floating Globe */}
           <div className="flex justify-center mb-8">
             <img 
               src="/lovable-uploads/67298761-7c4b-41cc-8a98-e8456c3763d0.png" 
               alt="Pixelated Globe" 
-              className="w-24 h-24 floating opacity-80"
+              className="w-24 h-24 animate-float opacity-80"
               style={{ filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.3))' }}
             />
           </div>
@@ -124,13 +178,13 @@ A simple tool that says hello world.`;
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> defined</span>
           </h1>
           <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-            Enact lets you package, sign, and distribute tools that AI agents can safely discover and execute.
-            Build containerized tools or LLM-driven workflows with simple YAML.
+            A verified, portable way to define, discover, and safely run AI-executable tools.
+            Think npm for AI tools—publish once, run anywhere, with cryptographic verification.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
 
             <Button onClick={() => {
-    document.getElementById('quickstart')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('signup')?.scrollIntoView({ behavior: 'smooth' });
   }} size="lg" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0">
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
@@ -164,7 +218,7 @@ A simple tool that says hello world.`;
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Why Enact?</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Secure tool execution through cryptographic signatures, semantic search, container isolation, and progressive disclosure
+              Semantic discovery, verified execution, deterministic runs, composable workflows, and immutable versioning
             </p>
           </div>
 
@@ -172,11 +226,11 @@ A simple tool that says hello world.`;
             <Card className="bg-black/40 border-purple-500/20 backdrop-blur-sm hover:border-purple-400/40 transition-colors">
               <CardHeader>
                 <Shield className="w-10 h-10 text-purple-400 mb-2" />
-                <CardTitle className="text-white">Cryptographically Signed</CardTitle>
+                <CardTitle className="text-white">Multi-Party Trust</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-white/70">
-                  Tools verified with Sigstore (Fulcio + Rekor). Multi-party signatures prevent malicious tools with immutable audit trail.
+                  Publishers create tools, auditors attest them. You choose which publishers and auditors to trust. Full control over what runs on your system.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -184,11 +238,11 @@ A simple tool that says hello world.`;
             <Card className="bg-black/40 border-yellow-400/20 backdrop-blur-sm hover:border-yellow-400/40 transition-colors">
               <CardHeader>
                 <Zap className="w-10 h-10 text-yellow-400 mb-2" />
-                <CardTitle className="text-white">Container Isolated</CardTitle>
+                <CardTitle className="text-white">Powered by Dagger</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-white/70">
-                  Runs in isolated Dagger containers with BuildKit caching. Safe, reproducible execution for both code and dependencies.
+                  Reproducible execution via Dagger engine. Smart content-addressable caching means instant re-runs for unchanged inputs.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -250,18 +304,18 @@ A simple tool that says hello world.`;
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">How It Works</h2>
             <p className="text-xl text-white/70">
-              Simple workflow from creation to execution
+              Simple workflow from creation to trusted execution
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white font-bold text-xl">1</span>
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Define</h3>
               <p className="text-white/70">
-                Create an enact.md file with YAML frontmatter describing your tool's metadata and markdown body for documentation.
+                Create an enact.md file with YAML frontmatter and markdown documentation.
               </p>
             </div>
 
@@ -271,17 +325,17 @@ A simple tool that says hello world.`;
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Publish</h3>
               <p className="text-white/70">
-                Use the Enact CLI to validate and publish your tool to the registry.
+                Publish to the registry with automatic Sigstore signing under your username namespace.
               </p>
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white font-bold text-xl">3</span>
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Execute</h3>
               <p className="text-white/70">
-                AI models discover and execute your tool safely in isolated Dagger containers.
+                Dagger orchestrates execution in sandboxed containers with strict isolation and caching.
               </p>
             </div>
           </div>
@@ -366,7 +420,7 @@ A simple tool that says hello world.`;
                 <div className="font-mono text-sm leading-relaxed overflow-x-auto">
                   <div className="text-purple-400 mb-2">---</div>
                   <div className="mb-1">
-                    <span className="text-cyan-400">enact:</span> <span className="text-emerald-300">"1.0.1"</span>
+                    <span className="text-cyan-400">enact:</span> <span className="text-emerald-300">"2.0.0"</span>
                   </div>
                   <div className="mb-1">
                     <span className="text-cyan-400">name:</span> <span className="text-emerald-300">"acme-corp/data/csv-processor"</span>
@@ -421,9 +475,9 @@ A simple tool that says hello world.`;
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Built-in Security</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Multi-Party Trust System</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Multiple layers of protection ensure you can trust the tools you execute
+              Publishers upload tools, auditors attest them. You choose who to trust.
             </p>
           </div>
 
@@ -432,16 +486,16 @@ A simple tool that says hello world.`;
               <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm">
                 <CardHeader>
                   <Shield className="w-12 h-12 text-purple-400 mb-2" />
-                  <CardTitle className="text-white">Cryptographic Signing</CardTitle>
+                  <CardTitle className="text-white">Two-Identity Model</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-white/70 space-y-2">
-                    <p>Published tools are cryptographically signed with identity-based certificates:</p>
+                    <p>Separate identities for publishing and attestation:</p>
                     <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li>Multi-party signatures via Sigstore (Fulcio + Rekor)</li>
-                      <li>Immutable transparency log for audit trail</li>
-                      <li>Real-time certificate revocation (CRL)</li>
-                      <li>Prevents tool tampering and impersonation</li>
+                      <li><strong className="text-white">Publishers</strong> (e.g. <code className="text-cyan-300">alice</code>) - Create and upload tools</li>
+                      <li><strong className="text-white">Auditors</strong> (e.g. <code className="text-cyan-300">github:bob</code>) - Review and sign tools</li>
+                      <li>Auditors use OIDC identities (GitHub, Google, etc.)</li>
+                      <li>You control exactly who to trust for what</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -450,16 +504,16 @@ A simple tool that says hello world.`;
               <Card className="bg-black/60 border-yellow-500/20 backdrop-blur-sm">
                 <CardHeader>
                   <Zap className="w-12 h-12 text-yellow-400 mb-2" />
-                  <CardTitle className="text-white">Container Isolation</CardTitle>
+                  <CardTitle className="text-white">Cryptographic Verification</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-white/70 space-y-2">
-                    <p>Tools run in isolated Dagger containers for complete separation:</p>
+                    <p>Attestations signed via Sigstore (Fulcio + Rekor):</p>
                     <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li>No access to host filesystem (except mounted dirs)</li>
-                      <li>Resource limits enforced (memory, CPU, disk)</li>
-                      <li>Network access controlled via annotations</li>
-                      <li>Container destroyed after execution</li>
+                      <li>Multi-party signatures from independent auditors</li>
+                      <li>Immutable transparency log for audit trail</li>
+                      <li>Prevents tool tampering and impersonation</li>
+                      <li>Tools run in isolated Dagger containers</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -470,27 +524,27 @@ A simple tool that says hello world.`;
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Book className="w-6 h-6 mr-3 text-green-400" />
-                  Trust Boundaries
+                  Configure Your Trust
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-4 text-sm">
                   <div>
-                    <code className="text-green-400">~/.enact/tools/</code>
+                    <code className="text-green-400">enact trust alice</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">User-level tools.</strong> Tools installed with --global flag. Can be customized locally. No verification needed.
+                      <strong className="text-white">Trust a publisher.</strong> Trust tools uploaded by this Enact username.
                     </p>
                   </div>
                   <div>
-                    <code className="text-blue-400">~/.enact/cache/</code>
+                    <code className="text-blue-400">enact trust github:bob</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">Verified on download.</strong> Immutable versioned bundles with checked signatures. Auto-managed.
+                      <strong className="text-white">Trust an auditor.</strong> Trust tools attested by this OIDC identity (note the colon).
                     </p>
                   </div>
                   <div>
-                    <code className="text-purple-400">Registry</code>
+                    <code className="text-purple-400">enact trust check tool</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">Public distribution.</strong> All tools signed and logged. Signatures verified before execution.
+                      <strong className="text-white">Verify trust.</strong> Check if a tool meets your trust policy before running.
                     </p>
                   </div>
                 </div>
@@ -525,7 +579,7 @@ A simple tool that says hello world.`;
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
 {`---
-enact: "1.0.1"
+enact: "2.0.0"
 name: "acme-corp/data/csv-processor"
 description: "Process and analyze CSV files"
 command: "python src/process.py --file='\${file}' --operation='\${operation}'"
@@ -564,7 +618,7 @@ Deterministic CSV processing in isolated containers.`}
               <CardContent>
                 <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
 {`---
-enact: "1.0.1"
+enact: "2.0.0"
 name: "acme-corp/brand/reviewer"
 description: "Review content for brand compliance"
 ---
@@ -703,163 +757,171 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
         </div>
       </section>
 
-{/* <section id="quickstart" className="py-20 bg-black/30">
-  <div className="container mx-auto px-4">
-    <div className="text-center mb-16">
-      <h2 className="text-4xl font-bold text-white mb-4">Enter the Enact Ecosystem</h2>
-      <p className="text-xl text-white/70 max-w-2xl mx-auto">
-        Whether you want to create new AI tools or use existing ones, you can get started in minutes.
-      </p>
-    </div>
+      {/* Quickstart Section */}
+      <section id="quickstart" className="py-20 bg-black/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Enter the Enact Ecosystem</h2>
+            <p className="text-xl text-white/70 max-w-2xl mx-auto">
+              Whether you want to create new AI tools or use existing ones, you can get started in minutes.
+            </p>
+          </div>
 
-    <div className="max-w-3xl mx-auto mb-16">
-      <Card className="bg-black/60 border-yellow-400/20 backdrop-blur-sm text-center">
-        <CardHeader>
-          <CardTitle className="text-white text-2xl flex items-center justify-center">
-            <Package className="w-6 h-6 mr-3" />
-            Install the Enact CLI
-          </CardTitle>
-          <CardDescription className="text-white/70">
-            Get started with the comprehensive Enact command-line interface
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="bg-slate-900/70 rounded-lg p-4 font-mono text-lg text-cyan-300 mb-4">
-            <p className="whitespace-pre-wrap"><span className="text-yellow-400">$</span> npm install -g @enactprotocol/cli</p>
+          <div className="max-w-3xl mx-auto mb-16">
+            <Card className="bg-black/60 border-yellow-400/20 backdrop-blur-sm text-center">
+              <CardHeader>
+                <CardTitle className="text-white text-2xl flex items-center justify-center">
+                  <Package className="w-6 h-6 mr-3" />
+                  Install the Enact CLI
+                </CardTitle>
+                <CardDescription className="text-white/70">
+                  Get started with the comprehensive Enact command-line interface
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-slate-900/70 rounded-lg p-4 font-mono text-lg text-cyan-300 mb-4 flex items-center justify-between">
+                  <p className="whitespace-pre-wrap"><span className="text-yellow-400">$</span> npm install -g @enactprotocol/cli</p>
+                  <button
+                    onClick={() => copyToClipboard('npm install -g @enactprotocol/cli')}
+                    className="ml-4 p-2 hover:bg-white/10 rounded transition-colors"
+                    aria-label="Copy to clipboard"
+                  >
+                    {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-white/60 hover:text-white" />}
+                  </button>
+                </div>
+                <p className="text-white/60 text-sm">
+                  Includes authentication, tool creation, publishing, discovery, execution, and MCP integration
+                </p>
+              </CardContent>
+            </Card>
           </div>
-          <p className="text-white/60 text-sm">
-            Includes authentication, tool creation, publishing, discovery, execution, and MCP integration
-          </p>
-        </CardContent>
-      </Card>
-    </div>
 
-    <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-      
-      <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm text-left flex flex-col">
-        <CardHeader>
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <Search className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <CardTitle className="text-white text-xl">Discover & Use Tools</CardTitle>
-              <CardDescription className="text-white/70">
-                For AI developers and applications.
-              </CardDescription>
-            </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            
+            <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm text-left flex flex-col">
+              <CardHeader>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <Search className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-white text-xl">Discover & Use Tools</CardTitle>
+                    <CardDescription className="text-white/70">
+                      For AI developers and applications.
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <p className="text-white/80 mb-4">
+                  Browse the official registry or use the CLI to find and execute tools with semantic search, cryptographic verification, and safe containerized execution.
+                </p>
+                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact search "text analysis"</p>
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact install org/cat/tool</p>
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact run org/cat/tool --args '{"{}"}'</p>
+                </div>
+              </CardContent>
+              <div className="p-6 pt-0">
+                <Button
+                  onClick={() => window.open('https://enact.tools', '_blank')}
+                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0 w-full"
+                >
+                  <Package className="w-5 h-5 mr-2" />
+                  Explore Registry
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="bg-black/60 border-green-500/20 backdrop-blur-sm text-left flex flex-col">
+              <CardHeader>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                    <Zap className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-white text-xl">Setup with your MCP Client</CardTitle>
+                    <CardDescription className="text-white/70">
+                      For AI applications and integrations.
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <p className="text-white/80 mb-4">
+                  Connect Enact to your favorite AI client with one command. Supports Claude Desktop, VS Code, and more MCP-compatible applications.
+                </p>
+                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp install --client claude-desktop</p>
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp install --client vscode</p>
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp status</p>
+                </div>
+              </CardContent>
+              <div className="p-6 pt-0">
+                <Button
+                  variant="outline"
+                  className="bg-green-500/10 border-green-400/30 text-green-300 hover:bg-green-400/20 w-full"
+                  onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+                >
+                  <Book className="w-4 h-4 mr-2" />
+                  MCP Setup Guide
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm text-left flex flex-col">
+              <CardHeader>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <Code className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-white text-xl">Create & Publish Tools</CardTitle>
+                    <CardDescription className="text-white/70">
+                      For developers and tool builders.
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <p className="text-white/80 mb-4">
+                  Get the Enact CLI to create, test, and publish your tools. The CLI includes authentication, environment management, MCP integration, and more:
+                </p>
+                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300">
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact init my-awesome-tool</p>
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact auth login</p>
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact publish ./my-awesome-tool/</p>
+                </div>
+              </CardContent>
+              <div className="p-6 pt-0">
+                <Button
+                  variant="outline"
+                  className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10 w-full"
+                  onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+                >
+                  <Book className="w-4 h-4 mr-2" />
+                  Creator Docs
+                </Button>
+              </div>
+            </Card>
           </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <p className="text-white/80 mb-4">
-            Browse the official registry or use the CLI to find and execute tools with semantic search, cryptographic verification, and safe containerized execution.
-          </p>
-          <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact search "text analysis"</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact install org/cat/tool</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact run org/cat/tool --args '{"{}"}'</p>
+          
+          <div className="text-center mt-12">
+            <p className="text-white/60 mb-4">Want to run your own private registry for your organization?</p>
+            <Button
+              variant="outline"
+              className="bg-black/20 border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
+              onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
+            >
+              <Github className="w-4 h-4 mr-2" />
+              Read the Self-Hosting Guide
+            </Button>
           </div>
-        </CardContent>
-        <div className="p-6 pt-0">
-          <Button
-            onClick={() => window.open('https://enact.tools', '_blank')}
-            className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0 w-full"
-          >
-            <Package className="w-5 h-5 mr-2" />
-            Explore Registry
-          </Button>
         </div>
-      </Card>
-
-      <Card className="bg-black/60 border-green-500/20 backdrop-blur-sm text-left flex flex-col">
-        <CardHeader>
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-              <Zap className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <CardTitle className="text-white text-xl">Setup with your MCP Client</CardTitle>
-              <CardDescription className="text-white/70">
-                For AI applications and integrations.
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <p className="text-white/80 mb-4">
-            Connect Enact to your favorite AI client with one command. Supports Claude Desktop, VS Code, and more MCP-compatible applications.
-          </p>
-          <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp install --client claude-desktop</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp install --client vscode</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp status</p>
-          </div>
-        </CardContent>
-        <div className="p-6 pt-0">
-          <Button
-            variant="outline"
-            className="bg-green-500/10 border-green-400/30 text-green-300 hover:bg-green-400/20 w-full"
-            onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
-          >
-            <Book className="w-4 h-4 mr-2" />
-            MCP Setup Guide
-          </Button>
-        </div>
-      </Card>
-
-      <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm text-left flex flex-col">
-        <CardHeader>
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <Code className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <CardTitle className="text-white text-xl">Create & Publish Tools</CardTitle>
-              <CardDescription className="text-white/70">
-                For developers and tool builders.
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <p className="text-white/80 mb-4">
-            Get the Enact CLI to create, test, and publish your tools. The CLI includes authentication, environment management, MCP integration, and more:
-          </p>
-          <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300">
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact init my-awesome-tool</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact auth login</p>
-            <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact publish ./my-awesome-tool/</p>
-          </div>
-        </CardContent>
-        <div className="p-6 pt-0">
-           <Button
-            variant="outline"
-            className="bg-purple-300 border-purple-400/30 text-cyan-900 hover:bg-purple-400/10 w-full"
-            onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
-          >
-            <Book className="w-4 h-4 mr-2" />
-            Creator Docs
-          </Button>
-        </div>
-      </Card>
-    </div>
-    
-    <div className="text-center mt-12">
-        <p className="text-white/60 mb-4">Want to run your own private registry for your organization?</p>
-        <Button
-            variant="outline"
-            className="bg-black/20 border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
-            onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
-        >
-            <Github className="w-4 h-4 mr-2" />
-            Read the Self-Hosting Guide
-        </Button>
-    </div>
-  </div>
-</section> */}
+      </section>
 
       {/* Sign Up Section */}
-      <section className="py-20">
+      <section id="signup" className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <Mail className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
