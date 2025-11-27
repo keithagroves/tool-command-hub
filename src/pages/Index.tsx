@@ -1,4 +1,4 @@
-import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, Book, Star, Mail, Menu, X, Copy, Check } from "lucide-react";
+import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, Book, Mail, Menu, X, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -151,18 +151,6 @@ A simple tool that says hello world.`;
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center relative">
         <div className="max-w-4xl mx-auto">
-          {/* GitHub Stars Badge */}
-          <a 
-            href="https://github.com/EnactProtocol/encat-spec-and-tools" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-black/40 border border-cyan-500/30 rounded-full px-4 py-2 mb-6 hover:border-cyan-400/50 transition-colors"
-          >
-            <Github className="w-4 h-4 text-white" />
-            <span className="text-white/80 text-sm">Star us on GitHub</span>
-            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-          </a>
-
           {/* Floating Globe */}
           <div className="flex justify-center mb-8">
             <img 
