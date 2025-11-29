@@ -71,7 +71,7 @@ A simple tool that says hello world.`;
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950">
       {/* Navigation */}
       <nav className="border-b border-cyan-500/20 bg-black/40 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <img
@@ -149,7 +149,7 @@ A simple tool that says hello world.`;
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 text-center relative">
+      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center relative">
         <div className="max-w-4xl mx-auto">
           {/* Floating Globe */}
           <div className="flex justify-center mb-8">
@@ -201,8 +201,8 @@ A simple tool that says hello world.`;
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-black/30">
-        <div className="container mx-auto px-4">
+      <section id="features" className="py-12 sm:py-20 bg-black/30">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Why Enact?</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
@@ -287,8 +287,8 @@ A simple tool that says hello world.`;
       </section>
 
       {/* How It Works */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
+      <section className="py-12 sm:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">How It Works</h2>
             <p className="text-xl text-white/70">
@@ -331,8 +331,8 @@ A simple tool that says hello world.`;
       </section>
 
       {/* Multi-File Applications */}
-      <section className="py-20 bg-black/30">
-        <div className="container mx-auto px-4">
+      <section className="py-12 sm:py-20 bg-black/30">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Full Applications, Not Just Scripts</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
@@ -341,7 +341,7 @@ A simple tool that says hello world.`;
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="text-white">Production-Grade Structure</CardTitle>
@@ -350,7 +350,7 @@ A simple tool that says hello world.`;
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
+                  <pre className="text-white/90 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
 {`csv-processor/
 ├── enact.md            # Tool definition & docs
 ├── src/
@@ -405,7 +405,7 @@ A simple tool that says hello world.`;
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="font-mono text-sm leading-relaxed overflow-x-auto">
+                <div className="font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
                   <div className="text-purple-400 mb-2">---</div>
                   <div className="mb-1">
                     <span className="text-cyan-400">enact:</span> <span className="text-emerald-300">"2.0.0"</span>
@@ -460,8 +460,8 @@ A simple tool that says hello world.`;
       </section>
 
       {/* Security Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
+      <section className="py-12 sm:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Multi-Party Trust System</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
@@ -470,7 +470,7 @@ A simple tool that says hello world.`;
           </div>
 
           <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm">
                 <CardHeader>
                   <Shield className="w-12 h-12 text-purple-400 mb-2" />
@@ -516,7 +516,7 @@ A simple tool that says hello world.`;
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                   <div>
                     <code className="text-green-400">enact trust alice</code>
                     <p className="text-white/70 mt-2">
@@ -543,8 +543,8 @@ A simple tool that says hello world.`;
       </section>
 
       {/* Code Examples */}
-      <section id="examples" className="py-20">
-        <div className="container mx-auto px-4">
+      <section id="examples" className="py-12 sm:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Executable & Instructional Tools</h2>
             <p className="text-xl text-white/70">
@@ -552,7 +552,7 @@ A simple tool that says hello world.`;
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto mb-12">
             <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
@@ -565,7 +565,7 @@ A simple tool that says hello world.`;
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
+                <pre className="text-white/90 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
 {`---
 enact: "2.0.0"
 name: "acme-corp/data/csv-processor"
@@ -604,7 +604,7 @@ Deterministic CSV processing in isolated containers.`}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <pre className="text-white/90 font-mono text-sm leading-relaxed overflow-x-auto">
+                <pre className="text-white/90 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
 {`---
 enact: "2.0.0"
 name: "acme-corp/brand/reviewer"
@@ -637,8 +637,8 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
       </section>
 
       {/* Local Development Workflow */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
+      <section className="py-12 sm:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Tool Installation Levels</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
@@ -648,7 +648,7 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
           </div>
 
           <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
               <Card className="bg-black/60 border-green-500/20 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="text-white text-lg">Project Tools</CardTitle>
@@ -694,7 +694,7 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="font-mono text-sm leading-relaxed overflow-x-auto">
+                <div className="font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
                   <div className="mb-3">
                     <span className="text-green-400"># Create a new tool</span>
                   </div>
@@ -746,8 +746,8 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
       </section>
 
       {/* Quickstart Section */}
-      <section id="quickstart" className="py-20 bg-black/30">
-        <div className="container mx-auto px-4">
+      <section id="quickstart" className="py-12 sm:py-20 bg-black/30">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Enter the Enact Ecosystem</h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
@@ -767,8 +767,8 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-slate-900/70 rounded-lg p-4 font-mono text-lg text-cyan-300 mb-4 flex items-center justify-between">
-                  <p className="whitespace-pre-wrap"><span className="text-yellow-400">$</span> npm install -g @enactprotocol/cli</p>
+                <div className="bg-slate-900/70 rounded-lg p-3 sm:p-4 font-mono text-sm sm:text-base lg:text-lg text-cyan-300 mb-4 flex items-center justify-between gap-2">
+                  <p className="whitespace-pre-wrap break-all"><span className="text-yellow-400">$</span> npm install -g @enactprotocol/cli</p>
                   <button
                     onClick={() => copyToClipboard('npm install -g @enactprotocol/cli')}
                     className="ml-4 p-2 hover:bg-white/10 rounded transition-colors"
@@ -784,8 +784,8 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
             </Card>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
+
             <Card className="bg-black/60 border-cyan-500/20 backdrop-blur-sm text-left flex flex-col">
               <CardHeader>
                 <div className="flex items-center space-x-4 mb-4">
@@ -804,7 +804,7 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
                 <p className="text-white/80 mb-4">
                   Browse the official registry or use the CLI to find and execute tools with semantic search, cryptographic verification, and safe containerized execution.
                 </p>
-                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
+                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-xs sm:text-sm text-cyan-300 mb-4 overflow-x-auto">
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact search "text analysis"</p>
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact install org/cat/tool</p>
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact run org/cat/tool --args '{"{}"}'</p>
@@ -839,7 +839,7 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
                 <p className="text-white/80 mb-4">
                   Connect Enact to your favorite AI client with one command. Supports Claude Desktop, VS Code, and more MCP-compatible applications.
                 </p>
-                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300 mb-4">
+                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-xs sm:text-sm text-cyan-300 mb-4 overflow-x-auto">
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp install --client claude-desktop</p>
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp install --client vscode</p>
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact mcp status</p>
@@ -875,7 +875,7 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
                 <p className="text-white/80 mb-4">
                   Get the Enact CLI to create, test, and publish your tools. The CLI includes authentication, environment management, MCP integration, and more:
                 </p>
-                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-sm text-cyan-300">
+                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-xs sm:text-sm text-cyan-300 overflow-x-auto">
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact init my-awesome-tool</p>
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact auth login</p>
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact publish ./my-awesome-tool/</p>
@@ -909,8 +909,8 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
       </section>
 
       {/* Sign Up Section */}
-      <section id="signup" className="py-20">
-        <div className="container mx-auto px-4">
+      <section id="signup" className="py-12 sm:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mx-auto text-center">
             <Mail className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -944,8 +944,8 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
 
 
       {/* Community & Links */}
-      <section className="py-20 bg-black/30">
-        <div className="container mx-auto px-4">
+      <section className="py-12 sm:py-20 bg-black/30">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-white mb-4">Join the Community</h2>
             <p className="text-xl text-white/70">
@@ -953,10 +953,10 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <Button 
-              variant="outline" 
-              size="lg" 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <Button
+              variant="outline"
+              size="lg"
               className="bg-purple-600 border-purple-400/50 text-cyan-400 hover:bg-purple-400/20 hover:border-purple-300 h-20 flex-col transition-all duration-300"
               onClick={() => window.open('https://discord.gg/mMfxvMtHyS', '_blank')}
             >
@@ -975,13 +975,13 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
 
       {/* Footer */}
       <footer className="border-t border-cyan-500/20 bg-black/40 py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center space-x-2">
               <img src="/logo.png" alt="Enact Protocol Logo" width={32} height={32} className="rounded-lg"/>
               <span className="text-white font-semibold">Enact Protocol</span>
             </div>
-            <div className="text-white/60 text-sm">
+            <div className="text-white/60 text-sm text-center md:text-left">
               © 2025 Enact Protocol Contributors • MIT License
             </div>
           </div>
