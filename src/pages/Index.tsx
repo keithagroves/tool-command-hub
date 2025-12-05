@@ -57,7 +57,6 @@ const Index = () => {
     }
   };
   const yamlCode = `---
-enact: "2.0.0"
 name: "username/utils/hello-world"
 description: "Greets the world"
 command: "echo 'Hello, World!'"
@@ -311,9 +310,9 @@ A simple tool that says hello world.`;
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white font-bold text-xl">2</span>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Publish</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Sign & Publish</h3>
               <p className="text-white/70">
-                Publish to the registry with automatic Sigstore signing under your username namespace.
+                Sign with your OIDC identity via Sigstore, then publish to the registry under your namespace.
               </p>
             </div>
 
@@ -474,16 +473,16 @@ A simple tool that says hello world.`;
               <Card className="bg-black/60 border-purple-500/20 backdrop-blur-sm">
                 <CardHeader>
                   <Shield className="w-12 h-12 text-purple-400 mb-2" />
-                  <CardTitle className="text-white">Two-Identity Model</CardTitle>
+                  <CardTitle className="text-white">Unified Identity Model</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-white/70 space-y-2">
-                    <p>Separate identities for publishing and attestation:</p>
+                    <p>Everyone signs with OIDC identities in <code className="text-cyan-300">provider:identity</code> format:</p>
                     <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li><strong className="text-white">Publishers</strong> (e.g. <code className="text-cyan-300">alice</code>) - Create and upload tools</li>
-                      <li><strong className="text-white">Auditors</strong> (e.g. <code className="text-cyan-300">github:bob</code>) - Review and sign tools</li>
-                      <li>Auditors use OIDC identities (GitHub, Google, etc.)</li>
-                      <li>You control exactly who to trust for what</li>
+                      <li><code className="text-cyan-300">github:alice</code> - GitHub user</li>
+                      <li><code className="text-cyan-300">github:EnactProtocol</code> - GitHub organization</li>
+                      <li><code className="text-cyan-300">google:security@company.com</code> - Google account</li>
+                      <li>Same mechanism for authors and auditors</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -492,16 +491,16 @@ A simple tool that says hello world.`;
               <Card className="bg-black/60 border-yellow-500/20 backdrop-blur-sm">
                 <CardHeader>
                   <Zap className="w-12 h-12 text-yellow-400 mb-2" />
-                  <CardTitle className="text-white">Cryptographic Verification</CardTitle>
+                  <CardTitle className="text-white">Sigstore Verification</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-white/70 space-y-2">
                     <p>Attestations signed via Sigstore (Fulcio + Rekor):</p>
                     <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li>Multi-party signatures from independent auditors</li>
-                      <li>Immutable transparency log for audit trail</li>
-                      <li>Prevents tool tampering and impersonation</li>
-                      <li>Tools run in isolated Dagger containers</li>
+                      <li>Authors sign their tools at publish time</li>
+                      <li>Third-party auditors can also sign attestations</li>
+                      <li>Immutable Rekor transparency log</li>
+                      <li>Users control which identities to trust</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -518,21 +517,21 @@ A simple tool that says hello world.`;
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                   <div>
-                    <code className="text-green-400">enact trust alice</code>
+                    <code className="text-green-400">enact trust github:alice</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">Trust a publisher.</strong> Trust tools uploaded by this Enact username.
+                      <strong className="text-white">Trust an identity.</strong> Trust tools signed by this OIDC identity.
                     </p>
                   </div>
                   <div>
-                    <code className="text-blue-400">enact trust github:bob</code>
+                    <code className="text-blue-400">enact trust -r github:alice</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">Trust an auditor.</strong> Trust tools attested by this OIDC identity (note the colon).
+                      <strong className="text-white">Remove trust.</strong> Revoke trust from an identity you no longer want to trust.
                     </p>
                   </div>
                   <div>
-                    <code className="text-purple-400">enact trust check tool</code>
+                    <code className="text-purple-400">enact trust --list</code>
                     <p className="text-white/70 mt-2">
-                      <strong className="text-white">Verify trust.</strong> Check if a tool meets your trust policy before running.
+                      <strong className="text-white">List trusted.</strong> View all identities in your trust configuration.
                     </p>
                   </div>
                 </div>
@@ -875,9 +874,10 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
                 <p className="text-white/80 mb-4">
                   Get the Enact CLI to create, test, and publish your tools. The CLI includes authentication, environment management, MCP integration, and more:
                 </p>
-                <div className="bg-slate-900/70 rounded-lg p-3 font-mono text-xs sm:text-sm text-cyan-300 overflow-x-auto">
+                <div className="font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact init my-awesome-tool</p>
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact auth login</p>
+                  <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact sign ./my-awesome-tool/</p>
                   <p className="whitespace-pre-wrap"><span className="text-purple-400">$</span> enact publish ./my-awesome-tool/</p>
                 </div>
               </CardContent>
