@@ -12,7 +12,7 @@ Each tool includes a self-contained `enact.md` manifest describing its inputs, o
 * 🔁 **Determinism** — Tools execute exactly as defined in their manifest
 * 🧩 **Composition** — Tools can be combined in workflows
 * 🗂️ **Versioning** — Semantic versions and reproducible, immutable bundles
-* 🔐 **Trust control** — You decide which publishers and auditors to trust
+* 🔐 **Trust control** — You decide which identities to trust
 
 ---
 
@@ -67,6 +67,28 @@ enact run . --args '{"name":"World"}'
 # → Hello, World!
 ```
 
+### Advanced: Tools with Build Steps
+
+For tools that need compilation or dependency installation, use the `build` field:
+
+```markdown
+---
+enact: "2.0.0"
+name: "alice/utils/hello-rust"
+description: "A Rust greeting tool"
+from: "rust:1.75-alpine"
+build: "rustc hello.rs -o hello"
+command: "./hello '${name}'"
+inputSchema:
+  type: object
+  properties:
+    name: { type: string }
+  required: ["name"]
+---
+```
+
+Build steps are cached by Dagger—first run compiles, subsequent runs are instant.
+
 ### 5. Publish
 
 ```bash
@@ -75,12 +97,12 @@ enact publish .
 # ✓ Published alice/utils/greeter@v1.0.0
 ```
 
-### 6. (Optional) Attest your tool
+### 6. (Optional) Sign and attest your tool
 
-Self-attest your tool to build trust:
+Sign your tool with Sigstore keyless signing to build trust:
 
 ```bash
-enact sign alice/utils/greeter@v1.0.0
+enact sign .
 
 ? Sign attestation with:
   > GitHub
@@ -97,31 +119,28 @@ enact sign alice/utils/greeter@v1.0.0
 
 ## Trust System
 
-Enact uses a dual-identity trust model:
+Enact uses cryptographic attestations via Sigstore. All trust is based on OIDC identities in `provider:identity` format:
 
-- **Publishers** (Enact usernames) - Who uploaded the tool
-- **Auditors** (OIDC identities) - Who cryptographically attested the tool (Github, Gitlab, etc.)
+- `github:alice` — GitHub user
+- `github:EnactProtocol` — GitHub organization
+- `google:security@company.com` — Google account
 
-You control which publishers and auditors you trust:
+Tool authors sign their own tools. Third-party auditors can add additional attestations.
 
 ```bash
-# Trust publishers (Enact accounts)
-enact trust alice
-enact trust EnactProtocol
-
-# Trust auditors (OIDC identities)
+# Trust identities (always use provider:identity format)
+enact trust github:alice
 enact trust github:EnactProtocol
 enact trust google:security@company.com
 
 # Remove trust
-enact trust -r alice
+enact trust -r github:alice
 enact trust -r github:sketchy-org
 ```
 
 **When you install a tool:**
-1. Is the publisher trusted ? → Install
-2. Has a trusted auditor attested it? → Install
-3. Neither? → Prompt or block based on policy
+1. Does the tool have attestations from identities you trust? → Install
+2. No trusted attestations? → Blocked (default policy: `require_attestation`)
 
 See [TRUST.md](docs/TRUST.md) for complete details.
 
@@ -176,14 +195,15 @@ enact exec alice/utils/greeter "cat enact.md"
 Anyone can review and attest tools:
 
 ```bash
-# Install tool to review
-enact install alice/utils/greeter@v1.0.0
+# Download tool for inspection (without installing)
+enact inspect alice/utils/greeter@v1.0.0
+cd greeter
 
 # Review the code, run security scans, test it
 # ...
 
-# Sign if it passes
-enact sign alice/utils/greeter@v1.0.0
+# Sign if it passes (from tool directory)
+enact sign .
 
 # Or report issues
 enact report alice/utils/greeter@v1.0.0 --reason "Security vulnerability found"
@@ -220,8 +240,8 @@ Where Enact stores things:
 | `.enact/`                        | Project-installed tools (commit `.enact/tools.json`) |
 | `~/.enact/tools/`                | Global installs                                      |
 | `~/.enact/cache/`                | Immutable tool bundles for fast reinstalls           |
-| `~/.enact/config.yaml`           | Trust configuration (publishers, auditors, policies) |
-| `~/.enact/env/{org}/{path}/.env` | Namespaced environment variables                     |
+| `~/.enact/config.yaml`           | Trust configuration (identities, policies)           |
+| `~/.enact/.env`                  | Global environment variables                         |
 
 ---
 
@@ -231,19 +251,15 @@ Example `~/.enact/config.yaml`:
 
 ```yaml
 trust:
-  # Trust these Enact publishers
-  publishers:
-    - EnactProtocol
-    - alice
-  
-  # Trust these auditors (OIDC identities)
+  # Trusted identities (OIDC format: provider:identity)
   auditors:
     - github:EnactProtocol
+    - github:alice
     - github:ossf
     - google:security@company.com
   
-  # Policy: require_audit, prompt, or allow
-  policy: prompt
+  # Policy: require_attestation (default), prompt, or allow
+  policy: require_attestation
   
   # Require at least this many trusted attestations
   minimum_attestations: 1
@@ -277,11 +293,10 @@ trust:
 
 ```bash
 # Create and publish your own tools
+enact sign .
 enact publish .
-enact sign alice/my-tool@v1.0
 
-# Trust yourself
-enact trust alice
+# Trust yourself (use your GitHub identity)
 enact trust github:alice
 
 # Install your tools without prompts
@@ -296,7 +311,7 @@ trust:
   auditors:
     - microsoft:security@company.com
     - github:company-security/*
-  policy: require_audit
+  policy: require_attestation
 ```
 
 Only tools audited by your security team can be installed.
@@ -320,15 +335,14 @@ enact install community/useful-tool
 ### Publishing
 ```bash
 enact auth login               # Authenticate with Enact
+enact sign .                   # Sign tool locally
 enact publish .                # Publish tool to your namespace
-enact sign tool@version        # Attest your own tool
 ```
 
 ### Trust Management
 ```bash
-enact trust alice              # Trust publisher
-enact trust github:auditor     # Trust auditor
-enact trust -r alice           # Remove trust
+enact trust github:alice       # Trust identity
+enact trust -r github:alice    # Remove trust
 enact trust list               # Show trusted identities
 enact trust check tool@version # Check tool's trust status
 ```
@@ -340,16 +354,11 @@ enact install tool --global    # Install globally
 enact install                  # Install all project tools
 ```
 
-# Search the registry
-enact search "pdf extraction"
-
-# View detailed tool information
-enact get username/utils/greeter
 
 ### Auditing
 ```bash
 enact install tool@version     # Install for review
-enact sign tool@version        # Attest if it passes
+enact sign .                   # Sign from tool directory if it passes
 enact report tool@version      # Report issues
 ```
 
@@ -366,6 +375,13 @@ enact get tool                 # View tool details
 enact list                     # List installed tools
 ```
 
+### Environment & Secrets
+```bash
+enact env set KEY VAL                      # Set env var
+enact env set KEY --secret --namespace ns  # Set secret in keyring.
+enact config list              # View configuration
+```
+
 ---
 
 ## Learn More
@@ -373,14 +389,14 @@ enact list                     # List installed tools
 * **Trust System** — [TRUST.md](docs/TRUST.md) - Complete guide to publishers, auditors, and attestations
 * **Protocol Specification** — [SPEC.md](docs/SPEC.md) - Technical specification
 * **CLI Commands** — [COMMANDS.md](docs/COMMANDS.md) - Full command reference
-* **Full Documentation** — [https://enact.tools](https://enact.tools)
+* **Full Documentation** — [https://enactprotocol.com](https://enactprotocol.com)
 
 ---
 
 ## Getting Help
 
 * **GitHub Issues** - [github.com/enactprotocol/cli/issues](https://github.com/enactprotocol/cli/issues)
-* **Documentation** - [enact.tools/docs](https://enact.tools)
+* **Documentation** - [enactprotocol.com/docs](https://enactprotocol.com)
 
 ---
 

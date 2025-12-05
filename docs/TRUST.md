@@ -2,61 +2,39 @@
 
 ## Enact Trust System
 
-**A multi-party attestation model for verifying AI tools with cryptographic signatures.**
+**A cryptographic attestation model for verifying AI tools with signed attestations.**
 
-Enact uses two types of identities for comprehensive security:
+Enact uses **Sigstore** for cryptographic signing. Publishers and auditors use their OIDC identities (GitHub, Google, Microsoft, etc.) to sign attestations about tools.
 
-1. **Publishers** (Enact usernames) - Who created/published the tool
-2. **Auditors** (OIDC identities) - Who reviewed and attested the tool
-
-Users configure trust for both, giving them full control over what runs on their system.
+Users configure which identities they trust, giving them full control over what runs on their system.
 
 ---
 
 ## Overview
 
-### Two Identity Types
+### Unified Identity Model
 
-**Publishers** - Enact accounts
-- Created on enact.tools
-- Username becomes namespace (e.g., `alice` → `alice/*`)
-- Used for publishing tools to registry
+Everyone who signs tools is identified by their **OIDC identity** in `provider:identity` format:
 
-**Auditors** - OIDC identities (GitHub, Google, Microsoft, etc.)
-- Used for cryptographically signing attestations
-- Verified via Sigstore (Fulcio + Rekor)
-- Can be anyone - tool publishers, third-party reviewers, security firms
+- `github:alice` - GitHub user alice
+- `github:EnactProtocol` - GitHub organization
+- `google:security@company.com` - Google account
+- `microsoft:user@company.com` - Microsoft account
 
-**Key insight:** Publishers upload tools. Auditors sign attestations about those tools. Users decide which publishers and auditors they trust.
+**Key insight:** Whether you're a tool author signing your own tool or a third-party auditor reviewing someone else's tool, you use the same signing mechanism and identity format. Users configure which identities they trust.
 
 ---
 
 ## How It Works
 
-### 1. Publishers Create and Upload Tools
+### 1. Tool Authors Sign Their Tools
+
+When you publish a tool, you sign it with your OIDC identity:
 
 ```bash
-# Sign up on https://enact.tools
-# Username: alice
-
-# Login and publish
+# Login and sign your tool
 enact auth login
-enact publish .
-# ✓ Published alice/utils/greeter@v1.0
-```
-
-**Namespace rule:** Your Enact username = your namespace.
-
-### 2. Auditors Review and Sign Tools
-
-Anyone can audit any tool by signing an attestation:
-
-```bash
-# Review the tool (future: enact inspect for containerized review)
-# For now, review via registry source code view or install locally
-
-# Sign if it passes review
-enact sign alice/utils/greeter@v1.0
+enact sign .
 
 ? Sign attestation with:
   > GitHub
@@ -65,45 +43,59 @@ enact sign alice/utils/greeter@v1.0
 
 # Opens browser for OIDC authentication
 # Creates Sigstore signature
+# Submits attestation to Enact registry
 # ✓ Attestation published
-  Signed by: github.com/EnactProtocol
-  Logged to Rekor: #123456
+#   Signed by: github:alice
+#   Logged to Rekor: #123456
+
+# Then publish
+enact publish .
+# ✓ Published alice/utils/greeter@v1.0
+```
+
+**What gets signed:**
+- Tool bundle hash (cryptographic proof of exact version)
+- Your OIDC identity
+- Timestamp (via Rekor transparency log)
+
+### 2. Third-Party Auditors Can Also Sign
+
+Anyone can audit any tool by signing an attestation:
+
+```bash
+# Download tool for inspection
+enact inspect alice/utils/greeter@v1.0
+cd greeter
+
+# Review the code, run security scans, test it
+# ...
+
+# Sign if it passes review (from tool directory)
+enact sign .
+# ✓ Attestation published
+#   Signed by: github:security-firm
 ```
 
 **Or report issues:**
 ```bash
 # Report if tool has security issues
-enact report alice/utils/greeter@v1.0 --reason "SQL injection vulnerability in query handler"
-
+enact report alice/utils/greeter@v1.0 --reason "SQL injection vulnerability"
 # ✓ Failed attestation published
-  Signed by: github.com/security-firm
+#   Signed by: github:security-firm
 ```
-
-**What gets signed:**
-- Tool bundle hash (cryptographic proof of exact version)
-- Status: passed or failed
-- Optional: reason, report URL, findings
-- Your OIDC identity
-- Timestamp (via Rekor)
 
 ### 3. Users Configure Trust
 
-Control which publishers and auditors you trust:
+Control which identities you trust:
 
 ```bash
-# Trust publishers (no colon = Enact username)
-enact trust alice
-enact trust EnactProtocol
-enact trust acme-corp
-
-# Trust auditors (has colon = OIDC identity)
+# Trust specific identities (always use provider:identity format)
+enact trust github:alice
 enact trust github:EnactProtocol
 enact trust google:security@company.com
-enact trust github:ossf
 
-# Remove trust (automatically inferred from format)
-enact trust -r alice                    # Removes publisher
-enact trust -r github:untrusted-org     # Removes auditor
+# Remove trust
+enact trust -r github:alice
 
 # List all trusted identities
 enact trust list
@@ -113,17 +105,13 @@ enact trust list
 ```yaml
 # ~/.enact/config.yaml
 trust:
-  publishers:
-    - EnactProtocol
-    - alice
-    - acme-corp
-  
   auditors:
     - github:EnactProtocol
-    - github:ossf
+    - github:alice
     - google:security@company.com
   
-  policy: require_audit
+  policy: require_attestation  # Default: block if not trusted
+  minimum_attestations: 1
 ```
 
 ### 4. Installing with Trust Verification
@@ -132,22 +120,18 @@ trust:
 enact install alice/utils/greeter
 
 Tool: alice/utils/greeter@v1.0
-  Published by: @alice (Enact)
   
 Attestations:
-  ✓ github.com/EnactProtocol - passed
-    Audit date: 2025-01-15
-  
-  ✓ github.com/ossf - passed
-    Audit date: 2025-01-16
+  ✓ github:alice - passed (tool author)
+  ✓ github:EnactProtocol - passed (third-party audit)
+  ✓ github:ossf - passed (third-party audit)
 
 Trust Status:
-  Publisher: @alice (not in trusted publishers)
-  Auditors: ✓ 2 trusted attestations found
+  ✓ 2 trusted attestations found (github:alice, github:EnactProtocol)
   
-Decision: ✓ INSTALL (trusted auditor attestations)
+Decision: ✓ INSTALL (meets minimum_attestations: 1)
 
-Install? [Y/n]:
+Installed alice/utils/greeter@v1.0
 ```
 
 ---
@@ -156,44 +140,46 @@ Install? [Y/n]:
 
 When you install a tool, Enact checks:
 
-1. **Is publisher trusted?** → ✅ Install immediately
-2. **Any trusted auditor signed it?** → ✅ Install
-3. **Neither trusted?** → Apply policy (prompt, block, or allow)
+1. **Fetch all attestations** from the registry
+2. **Verify cryptographically** via Sigstore
+3. **Check against trusted identities** in your config
+4. **Apply minimum_attestations** requirement
+5. **Apply policy** (require_attestation, prompt, or allow)
 
 **Example scenarios:**
 
 ```yaml
-# Scenario 1: Trust the publisher
+# Scenario 1: Trust the tool author
 trust:
-  publishers:
-    - alice
+  auditors:
+    - github:alice
 
-# alice/tool → Installs immediately (no audit needed)
-# bob/tool → Checks auditors
+# alice/tool (signed by alice) → Installs (trusted author)
+# bob/tool (signed by bob) → Checks policy (not trusted)
 ```
 
 ```yaml
-# Scenario 2: Only trust auditors
+# Scenario 2: Only trust security auditors
 trust:
   auditors:
-    - github:EnactProtocol
+    - github:security-firm
+    - github:ossf
 
-# alice/tool (audited by EnactProtocol) → Installs
-# alice/tool (not audited) → Blocked/prompted
-# bob/tool (audited by EnactProtocol) → Installs
+# alice/tool (audited by security-firm) → Installs
+# alice/tool (only self-signed) → Blocked/prompted
+# bob/tool (audited by ossf) → Installs
 ```
 
 ```yaml
-# Scenario 3: Trust both
+# Scenario 3: Require multiple attestations
 trust:
-  publishers:
-    - alice
   auditors:
+    - github:alice
     - github:EnactProtocol
+    - github:ossf
+  minimum_attestations: 2
 
-# alice/tool → Installs (trusted publisher)
-# bob/tool (audited) → Installs (trusted auditor)
-# bob/tool (not audited) → Blocked/prompted
+# Tool needs 2+ trusted attestations to install
 ```
 
 ---
@@ -202,14 +188,14 @@ trust:
 
 ```yaml
 trust:
-  policy: require_audit  # Options: require_audit, prompt, allow
-  minimum_attestations: 1  # How many trusted auditors required
+  policy: require_attestation  # Options: require_attestation, prompt, allow
+  minimum_attestations: 1      # How many trusted attestations required
 ```
 
 **Policies:**
-- **require_audit** - Block if no trusted publisher/auditor (recommended)
-- **prompt** - Ask user to confirm
-- **allow** - Install anyway (development mode)
+- **require_attestation** - Block if no trusted attestations found (default, strictest)
+- **prompt** - Ask user to confirm untrusted tools (interactive mode only)
+- **allow** - Install anyway (development mode only)
 
 **Minimum attestations:**
 ```yaml
@@ -217,46 +203,44 @@ trust:
   auditors:
     - github:EnactProtocol
     - github:ossf
-  minimum_attestations: 2  # Require both auditors to sign
+    - github:alice
+  minimum_attestations: 2  # Require 2 trusted attestations to install
 ```
 
 ---
 
-## Self-Attestation
+## Self-Signing
 
-Publishers can audit their own tools:
+Tool authors typically sign their own tools:
 
 ```bash
+# Sign your tool before publishing
+enact sign .
+# Signs with: github:alice
+
 # Publish
 enact publish .
 # ✓ Published alice/my-tool@v1.0
-
-# Self-attest
-enact sign alice/my-tool@v1.0
-# Signs with: github.com/alice
 ```
 
 **User perspective:**
 ```
 Attestations:
-  ✓ github.com/alice - passed (self-attested)
+  ✓ github:alice - passed (tool author)
 
 Your trust:
-  Publisher: @alice (not trusted)
-  Auditors: github:alice (not trusted)
+  Trusted identities: github:EnactProtocol (not matching)
 
 ⚠ No trusted attestations found
 Install anyway? [y/N]:
 ```
 
-**To trust self-attestations:**
+**To trust this author:**
 ```bash
-# Option 1: Trust the publisher
-enact trust alice
-
-# Option 2: Trust their OIDC identity as auditor
 enact trust github:alice
 ```
+
+Now tools signed by `github:alice` will be trusted.
 
 ---
 
@@ -264,19 +248,13 @@ enact trust github:alice
 
 ### Trust Management
 ```bash
-# Trust publishers (no colon = Enact username)
-enact trust alice
-enact trust EnactProtocol
-enact trust acme-corp
-
-# Trust auditors (has colon = OIDC identity)
+# Trust identities (always use provider:identity format)
+enact trust github:alice
 enact trust github:EnactProtocol
 enact trust google:security@company.com
-enact trust github:my-company/*
 
-# Remove trust (format automatically inferred)
-enact trust -r alice                    # Removes publisher
-enact trust -r github:sketchy-org       # Removes auditor
+# Remove trust
+enact trust -r github:alice
 
 # List all trusted identities
 enact trust list
@@ -285,18 +263,25 @@ enact trust list
 enact trust check alice/my-tool@v1.0
 ```
 
-### Auditing
+### Signing and Reporting
 ```bash
-# Review tool (future: enact inspect)
-# For now, review via registry or install locally
+# Sign your own tool (from tool directory)
+enact sign .
 
-# Sign if it passes audit
-enact sign tool@version
+# Download and audit someone else's tool
+enact inspect tool@version
+cd tool-name
+
+# Review code, run security scans, test functionality
+# ...
+
+# Sign if it passes audit (from tool directory)
+enact sign .
 
 # Report if it fails audit
 enact report tool@version --reason "Security issue found"
 
-# Check trust status and view attestations
+# Check attestations for any tool
 enact trust check tool@version
 ```
 
@@ -304,39 +289,31 @@ enact trust check tool@version
 
 ## Identity Format
 
-### Publishers (Enact Usernames)
+All trusted identities use the `provider:identity` format:
+
+**Common providers:**
 ```bash
-enact trust alice
-enact trust acme-corp
-enact trust EnactProtocol
+enact trust github:alice              # GitHub user
+enact trust github:my-org             # GitHub organization  
+enact trust google:alice@example.com  # Google account
+enact trust microsoft:user@company.com # Microsoft account
 ```
 
-Simple username from enact.io account. **No colon in the identifier.**
-
-### Auditors (OIDC Identities)
-
-**Shorthand (has colon):**
-```bash
-enact trust github:EnactProtocol
-enact trust google:alice@example.com
-enact trust microsoft:security@company.com
+**Wildcards (in config file):**
+```yaml
+trust:
+  auditors:
+    - github:my-org/*        # Trust entire GitHub org
+    - google:*@company.com   # Trust all company emails
 ```
 
-**Wildcards:**
-```bash
-enact trust github:my-org/*        # Trust entire GitHub org
-enact trust google:*@company.com   # Trust all company emails
-```
-
-**Advanced (explicit in config file):**
+**Advanced (explicit issuer in config file):**
 ```yaml
 trust:
   auditors:
     - issuer: https://token.actions.githubusercontent.com
       subject: https://github.com/EnactProtocol/*
 ```
-
-**The colon (`:`) is the key:** It tells Enact whether you're trusting a publisher or an auditor.
 
 ---
 
@@ -345,13 +322,10 @@ trust:
 ```yaml
 # ~/.enact/config.yaml (created on first run)
 trust:
-  publishers:
-    - EnactProtocol  # Trust official Enact tools
-  
   auditors:
-    - github:EnactProtocol  # Trust official auditor
+    - github:EnactProtocol  # Trust official Enact tools
   
-  policy: prompt
+  policy: require_attestation  # Block untrusted tools by default
   minimum_attestations: 1
 ```
 
@@ -362,78 +336,75 @@ trust:
 ### Personal Developer
 ```yaml
 trust:
-  publishers:
-    - alice  # Trust your own tools
   auditors:
-    - github:EnactProtocol
-    - github:alice  # Trust your own audits
-  policy: prompt
+    - github:alice          # Trust your own signing identity
+    - github:EnactProtocol  # Trust official auditor
+  policy: require_attestation
 ```
 
 ```bash
 # Your workflow
+enact sign .              # Sign with github:alice
 enact publish .           # Publish to alice/*
-enact sign alice/tool@v1  # Self-attest
-enact install alice/tool  # Installs (trusted publisher)
+enact install alice/tool  # Installs (trusted identity)
 ```
 
 ### Enterprise Security Team
 ```yaml
 trust:
-  publishers: []  # Don't auto-trust any publisher
-  
   auditors:
     - microsoft:security@company.com
     - github:company-security/*
   
-  policy: require_audit
+  policy: require_attestation
   minimum_attestations: 1
 ```
 
-Only tools audited by internal security team can be installed.
+Only tools signed by internal security team can be installed.
 
 ### Open Source Project
 ```yaml
 trust:
-  publishers:
-    - my-project  # Trust official project account
-  
   auditors:
     - github:EnactProtocol
     - github:ossf
     - github:my-project/*
   
-  policy: require_audit
+  policy: require_attestation
+  minimum_attestations: 2
 ```
+
+Require at least 2 trusted attestations for any tool.
 
 ### Development Mode
 ```yaml
 trust:
-  publishers:
-    - alice
+  auditors:
+    - github:alice
   
-  policy: allow  # Install anything (for testing)
+  policy: allow  # Install anything (for testing only)
 ```
 
 ---
 
-## Becoming an Auditor
+## Becoming a Trusted Auditor
 
 1. **Choose your OIDC identity** (GitHub, Google, etc.)
 2. **Review tools thoroughly**
-   - Review source code (via registry or local install)
+   - Download for inspection: `enact inspect tool@version`
+   - Navigate to tool: `cd tool-name`
    - Analyze code, run security scans
    - Test functionality
-3. **Publish attestations**
-   - `enact sign tool@ver` if it passes
-   - `enact report tool@ver` if it fails
+3. **Sign attestations**
+   - `enact sign .` from tool directory if it passes
+   - `enact report tool@ver --reason "..."` if it fails
 4. **Build reputation**
    - Be transparent about methodology
    - Provide detailed reports
    - Be consistent
 5. **Tell users to trust you**
    - Document your process
-   - Share your OIDC identity: `provider:identity`
+   - Share your identity: `github:your-org`
    - Users add with `enact trust github:your-org`
 
 ---
@@ -442,7 +413,7 @@ trust:
 
 ### What Enact Provides
 
-✅ **Publisher identity** - Verified Enact accounts  
+✅ **Identity verification** - OIDC identities verified via Sigstore  
 ✅ **Attestation authenticity** - Cryptographic proof via Sigstore  
 ✅ **Integrity** - Tools haven't been tampered with  
 ✅ **Transparency** - All attestations in public Rekor log  
@@ -451,7 +422,7 @@ trust:
 ### What Enact Does NOT Provide
 
 ❌ **Code quality** - Attestations don't guarantee bug-free code  
-❌ **Auditor competence** - You must vet auditors  
+❌ **Signer competence** - You must vet who you trust  
 ❌ **Continuous monitoring** - Point-in-time attestations only  
 ❌ **Legal warranties** - Technical verification, not legal liability  
 
@@ -459,49 +430,37 @@ trust:
 
 ## FAQ
 
-### Q: What's the difference between publishers and auditors?
+### Q: Do I need to trust every tool author?
 
-**A:** Publishers are Enact accounts that upload tools. Auditors are OIDC identities that cryptographically sign attestations about tools. The format tells them apart: `alice` is a publisher, `github:alice` is an auditor.
+**A:** No. You can trust specific identities you've vetted (like `github:alice`), or rely on third-party auditors you trust (like `github:security-firm`). If a tool is signed by any identity you trust, it can be installed.
 
-### Q: Why separate them?
+### Q: Can tool authors sign their own tools?
 
-**A:** Flexibility. You might trust a publisher to create good tools, or you might only trust third-party auditors. Or both! You can also have multiple team members attest using different OIDC identities while publishing from one Enact account.
+**A:** Yes! This is the typical workflow. When you publish a tool, you sign it with `enact sign .` using your OIDC identity. Users who trust your identity can install your tools.
 
-### Q: Can publishers and auditors be the same person?
+### Q: What if I want extra verification beyond the author?
 
-**A:** Yes! If you trust Enact user "alice" as a publisher AND trust "github:alice" as an auditor, you're trusting the same person in both roles. But they're technically separate systems.
-
-### Q: Do I need to configure both publishers and auditors?
-
-**A:** No. You can:
-- Only trust publishers (install their tools without audits)
-- Only trust auditors (any tool is OK if audited)
-- Trust both (maximum flexibility)
-- Trust neither (prompt for everything)
-
-### Q: What if I trust a publisher but they publish a bad tool?
-
-**A:** Remove them from your trusted publishers list: `enact trust -r alice`. You can also check if trusted auditors have reported issues with specific tools.
+**A:** Use `minimum_attestations: 2` in your config. This requires tools to have attestations from 2+ trusted identities before installing.
 
 ### Q: Can attestations be faked?
 
 **A:** No. Sigstore provides cryptographic proof. Attestations are signed with OIDC identities and logged in Rekor's transparency log. Tampering is cryptographically detectable.
 
-### Q: What happens if an auditor reports a tool as failed?
+### Q: What happens if someone reports a tool as failed?
 
-**A:** Failed attestations are still attestations. If a trusted auditor reports a tool, installation will be blocked/prompted even if other auditors passed it. Failed attestations create an audit trail.
+**A:** Failed attestations are still recorded. If a trusted identity reports a tool, installation will be blocked/prompted. Use `enact trust check tool@version` to see all attestations including reports.
 
 ### Q: How do I see why a tool was reported?
 
-**A:** Use `enact trust check tool@version` to show the trust status, attestations, and any reported issues.
+**A:** Use `enact trust check tool@version` to view all attestations and any failure reasons.
 
 ### Q: What OIDC providers are supported?
 
-**A:** Any provider that Sigstore accepts: GitHub, Google, Microsoft, GitLab, and custom OIDC servers. The CLI will guide you through authentication.
+**A:** GitHub, Google, Microsoft, GitLab, and custom OIDC servers. The CLI will guide you through authentication.
 
-### Q: How does the colon (`:`) work in trust identifiers?
+### Q: What's the identity format?
 
-**A:** The colon separates the OIDC provider from the identity. `github:alice` means "GitHub user alice". No colon means it's an Enact username (publisher). This lets the CLI automatically infer whether you're trusting a publisher or auditor.
+**A:** Always `provider:identity`, e.g., `github:alice`, `google:user@example.com`. This format is required for all trust operations.
 
 ---
 
@@ -520,12 +479,19 @@ Attestations follow the in-toto statement format:
       "sha256": "abc123..."
     }
   }],
-  "predicateType": "https://enactprotocol.com/audit/v1",
+  "predicateType": "https://enact.tools/attestation/audit/v1",
   "predicate": {
-    "status": "passed",
-    "audit_date": "2025-01-15T10:30:00Z",
-    "reason": "No security issues found",
-    "report_url": "https://audits.example.com/report-123"
+    "type": "https://enact.tools/attestation/audit/v1",
+    "tool": {
+      "name": "alice/utils/greeter",
+      "version": "1.0.0"
+    },
+    "audit": {
+      "auditor": "alice@github.com",
+      "timestamp": "2025-01-15T10:30:00Z",
+      "result": "passed",
+      "notes": "No security issues found"
+    }
   }
 }
 ```
@@ -540,10 +506,11 @@ This is signed with Sigstore and stored in the registry with the certificate con
 When verifying trust, Enact:
 
 1. Extracts OIDC identity from Sigstore certificate
-2. Checks if it matches any trusted auditor pattern
-3. Supports wildcards: `github:my-org/*` matches any identity from that org
-4. Verifies Sigstore signature cryptographically
-5. Checks Rekor transparency log for tampering
+2. Converts email to `provider:identity` format
+3. Checks if it matches any trusted identity pattern
+4. Supports wildcards: `github:my-org/*` matches any identity from that org
+5. Verifies Sigstore signature cryptographically
+6. Checks Rekor transparency log for tampering
 
 ---
 

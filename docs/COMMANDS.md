@@ -12,21 +12,22 @@ This document provides a comprehensive overview of all available commands in the
 5. [sign](#5-sign---sign-tool) - Sign tool
 6. [publish](#6-publish---publish-tool) - Publish tool
 7. [get](#7-get---get-tool-info) - Get tool info
+8. [inspect](#8-inspect---inspect-tool-for-auditing) - Inspect tool for auditing
 
 ### Trust & Security Commands
-8. [trust](#8-trust---manage-trust-settings) - Manage trust settings
-9. [report](#9-report---report-tool-issues) - Report tool issues
+9. [trust](#9-trust---manage-trust-settings) - Manage trust settings
+10. [report](#10-report---report-tool-issues) - Report tool issues
 
 ### Environment & Configuration
-10. [secret](#10-secret---secret-management) - Secret management
-11. [config](#11-config---configuration) - Configuration
+11. [env](#11-env---environment--secret-management) - Environment & secret management
+12. [config](#12-config---configuration) - Configuration
 
 ### Utility Commands
-12. [cache](#12-cache---cache-management) - Cache management
-13. [list](#13-list---list-tools) - List tools
+13. [cache](#13-cache---cache-management) - Cache management
+14. [list](#14-list---list-tools) - List tools
 
 ### Authentication
-14. [auth](#14-auth---authentication) - Authentication
+15. [auth](#15-auth---authentication) - Authentication
 
 ---
 
@@ -57,10 +58,18 @@ Enact CLI manages containerized tools with cryptographic signing. It supports lo
 - `--no-cache` - Force a clean run by disabling Dagger caching
 - `--dry-run` - Show what would execute without running
 - `--verbose` - Show detailed execution info
+- `--quiet, -q` - Suppress output except for tool output
 
 **Behavior**:
 - If tool has `command` field → executes in container with declared command
-- If tool has no `command` field → errors with: "Tool has no command field. Use 'enact get' to read instructions or 'enact exec' to run custom commands."
+- If tool has no `command` field → displays the tool's markdown instructions
+- If tool has `build` field → build commands run first (cached by Dagger)
+
+**Build Caching**:
+Tools with a `build` field benefit from Dagger's layer caching:
+- First run: Container image pull + build steps + command (may be slow)
+- Subsequent runs: Cached build → only command executes (instant)
+- Use `--no-cache` to force a fresh build
 
 **Resolution order**: Project `.enact/` → `~/.enact/tools/` (user-level) → `~/.enact/cache/` → download from registry
 
@@ -74,6 +83,15 @@ enact run kgroves88/ai/pdf-extract --args '{"pdf_path":"doc.pdf","pages":[1,2]}'
 
 # Dry run to see what would execute
 enact run myorg/data/processor --args '{"file":"data.csv"}' --dry-run
+
+# Run tool with build step (first run compiles, subsequent runs are cached)
+enact run ./examples/hello-rust --args '{"name":"World"}'
+
+# Force fresh build (skip cache)
+enact run myorg/utils/tool --args '{}' --no-cache
+
+# Quiet mode (only show tool output)
+enact run myorg/utils/hello --args '{"name":"Alice"}' --quiet
 ```
 
 ---
@@ -129,6 +147,9 @@ enact exec kgroves88/ai/pdf-extract "python extract.py --file=doc.pdf --pages=1-
 
 **Options**:
 - `--global, -g` - Install to `~/.enact/tools/` for user-level access (like npm -g)
+- `--force, -f` - Overwrite existing installation
+- `--verbose` - Show detailed output
+- `--json` - Output result as JSON
 
 **Behavior**:
 
@@ -209,29 +230,44 @@ enact search formatter --json
 
 ### 5. sign - Sign Tool
 
-**Purpose**: Cryptographically sign a tool for publishing.
+**Purpose**: Cryptographically sign a tool and submit attestation to registry.
 
-**Usage**: `enact sign <path> [options]`
+**Usage**: `enact sign <path-or-ref> [options]`
 
 **Arguments**:
-- `path` - Path to tool directory
+- `path-or-ref` - Either a local path to tool directory OR a remote tool reference (`author/tool@version`)
 
 **Options**:
-- `--identity <email>` - Sign with specific identity (uses OAuth)
+- `--identity, -i <email>` - Sign with specific identity (uses OAuth)
+- `--output, -o <path>` - Output path for signature bundle (local only)
+- `--dry-run` - Show what would be signed without signing
+- `--local` - Save signature locally only, do not submit to registry
+- `--verbose` - Show detailed output
+- `--json` - Output result as JSON
 
 **Process**:
-1. Authenticates via OAuth (GitHub, Google, etc.)
+1. Authenticates via OAuth (GitHub)
 2. Generates ephemeral keypair
 3. Requests certificate from Fulcio
-4. Creates signature
-5. Logs to Rekor transparency log
-6. Creates signature bundle
+4. Creates in-toto attestation
+5. Signs with ECDSA
+6. Logs to Rekor transparency log
+7. Submits attestation to Enact registry (unless --local)
 
 **Examples**:
 ```bash
+# Sign a local tool
 enact sign ./my-tool/
-enact sign ./my-tool/ --identity=me@example.com
+enact sign ./my-tool/ --output=./my-tool.sigstore
+enact sign ./my-tool/ --dry-run  # Preview without signing
+enact sign ./my-tool/ --local    # Sign locally without submitting
+
+# Sign a remote tool (already published)
+enact sign alice/my-tool@1.0.0            # Sign by bundle hash
+enact sign alice/my-tool@1.0.0 --dry-run  # Preview what would be signed
 ```
+
+**Remote signing**: When signing a remote tool reference, the CLI fetches the tool's bundle hash from the registry and creates an attestation for that specific version. This allows auditors to sign tools without downloading the source.
 
 ---
 
@@ -293,41 +329,93 @@ enact get acme-corp/workflows/data-pipeline --format md
 
 ---
 
+### 8. inspect - Inspect Tool for Auditing
+
+**Purpose**: Download a tool for inspection and auditing without installing it to your tools directory.
+
+**Usage**: `enact inspect <tool[@version]> [options]`
+
+**Arguments**:
+- `tool[@version]` - Tool identifier with optional version
+
+**Options**:
+- `-w, --web` - Open tool page in browser instead of downloading
+- `-o, --output <path>` - Output directory (default: tool name in current directory)
+- `-f, --force` - Overwrite existing directory
+- `--verbose` - Show detailed output
+- `--json` - Output result as JSON
+
+**Behavior**:
+- Downloads the tool bundle from the registry
+- Extracts to a local directory for review
+- Does NOT install to ~/.enact/tools/ or .enact/
+- Does NOT require trust verification (purpose is to audit before trusting)
+- With `--web`, opens the registry page in your browser for quick review
+
+**Use cases**:
+- Security audits before adding a tool to your trusted list
+- Reviewing tool code before your organization adopts it
+- Understanding how a tool works internally
+- Quick browser-based review with `--web`
+
+**Examples**:
+```bash
+# Inspect a tool (extracts to ./greeter/ in current directory)
+enact inspect alice/utils/greeter
+
+# Inspect specific version
+enact inspect alice/utils/greeter@v1.0.0
+
+# Open in browser for quick review
+enact inspect alice/utils/greeter --web
+
+# Specify output directory
+enact inspect alice/utils/greeter --output ./review/greeter
+
+# Complete audit workflow
+enact inspect alice/utils/greeter@v1.0.0
+cd greeter
+# Review code, run security scans, test functionality...
+enact sign .          # Sign if it passes
+# OR
+enact report alice/utils/greeter@v1.0.0 --reason "Issue found"
+```
+
+---
+
 ## Trust & Security Commands
 
-### 8. trust - Manage Trust Settings
+### 9. trust - Manage Trust Settings
 
-**Purpose**: Control which publishers and auditors you trust.
+**Purpose**: Control which identities you trust for attestation verification.
 
 **Usage**: `enact trust <subcommand> [identity]`
 
 **Subcommands**:
-- `<identity>` - Trust a publisher or auditor (shorthand for `add`)
+- `<identity>` - Trust an identity (must be in `provider:identity` format)
 - `-r <identity>` or `remove <identity>` - Remove trust
 - `list` - List all trusted identities
 - `check <tool@version>` - Check trust status of a tool
 
-**Identity formats**:
-- **Publishers** (Enact usernames): `alice`, `EnactProtocol`, `acme-corp`
-- **Auditors** (OIDC identities): `github:EnactProtocol`, `google:security@company.com`
-- **Wildcards**: `github:my-org/*`, `google:*@company.com`
+**Identity format** (always `provider:identity`):
+- `github:alice` - GitHub user
+- `github:EnactProtocol` - GitHub organization
+- `google:security@company.com` - Google account
+- `microsoft:user@company.com` - Microsoft account
+
+**Wildcards** (in config file):
+- `github:my-org/*` - Trust entire GitHub org
+- `google:*@company.com` - Trust all company emails
 
 **Examples**:
 ```bash
-# Trust publishers (Enact accounts)
-enact trust alice
-enact trust EnactProtocol
-
-# Trust auditors (OIDC identities)
+# Trust identities (always use provider:identity format)
+enact trust github:alice
 enact trust github:EnactProtocol
 enact trust google:security@company.com
 
-# Trust with wildcards
-enact trust github:my-company/*
-enact trust google:*@company.com
-
 # Remove trust
-enact trust -r alice
+enact trust -r github:alice
 enact trust -r github:sketchy-org
 
 # List trusted identities
@@ -343,22 +431,25 @@ See [TRUST.md](TRUST.md) for complete trust system documentation.
 
 ---
 
-### 9. report - Report Tool Issues
+### 10. report - Report Tool Issues
 
 **Purpose**: Report security vulnerabilities or issues with a tool.
 
-**Usage**: `enact report <tool@version> --reason "<description>" [options]`
+**Usage**: `enact report <tool[@version]> --reason "<description>" [options]`
 
 **Arguments**:
-- `tool@version` - Tool identifier with version
+- `tool[@version]` - Tool identifier, optionally with version
 
 **Options**:
-- `--reason <description>` - Issue description (required)
-- `--severity <level>` - Severity: critical, high, medium, low
-- `--category <type>` - Issue type: security, malware, quality, license, other
+- `--reason, -r <description>` - Issue description (required)
+- `--severity, -s <level>` - Severity: critical, high, medium, low (default: medium)
+- `--category, -c <type>` - Issue type: security, malware, quality, license, other (default: other)
+- `--dry-run` - Show what would be submitted without submitting
+- `--verbose` - Show detailed output
+- `--json` - Output result as JSON
 
 **Behavior**:
-- Creates a signed report in the registry
+- Creates a report in the registry
 - Notifies tool publisher
 - May affect tool's trust status
 - Reports are public and auditable
@@ -376,6 +467,11 @@ enact report bob/tools/formatter@v2.0.0 \
   --reason "Tool fails on large files" \
   --severity medium \
   --category quality
+
+# Preview without submitting
+enact report alice/utils/greeter \
+  --reason "Issue description" \
+  --dry-run
 ```
 
 **Note**: False reports may result in account suspension.
@@ -384,44 +480,131 @@ enact report bob/tools/formatter@v2.0.0 \
 
 ## Environment & Configuration
 
-### 10. secret - Secret Management
+### 11. env - Environment & Secret Management
 
-**Purpose**: Manage secrets using OS-native keyring storage with namespace inheritance.
+**Purpose**: Unified management of both environment variables (.env files) and secrets (OS keyring).
 
-**Usage**: `enact secret <subcommand> [options]`
+**Usage**: `enact env <subcommand> [options]`
 
 **Subcommands**:
-- `set <namespace> <key>` - Store secret in OS keyring
-- `get <namespace> <key>` - Check if secret exists (never prints value)
-- `list <namespace>` - List secret names for namespace
-- `delete <namespace> <key>` - Remove secret from keyring
-- `resolve <tool>` - Show secret resolution for a tool
+- `set <key> [value]` - Set environment variable or secret
+- `get <key>` - Get environment variable or check secret existence
+- `list` - List environment variables or secrets
+- `delete <key>` - Delete environment variable or secret
+- `resolve <tool>` - Show complete environment resolution for a tool
+- `edit` - Open .env file in editor (non-secrets only)
 
-**Storage**: OS-native keyring (macOS Keychain, Windows Credential Manager, Linux Secret Service)
+**Storage**:
+- **Non-secrets**: `.env` files
+  - Global: `~/.enact/.env`
+  - Local: `.enact/.env`
+  - Priority: Local → Global → Default
+- **Secrets** (with `--secret` flag): OS keyring
+  - Service: `enact-cli`
+  - Account format: `{namespace}:{SECRET_NAME}`
+  - Namespace inheritance (walks up tool path)
 
-**Examples**:
+**Options**:
+- `--secret` - Store in OS keyring instead of `.env` file
+- `--namespace <namespace>` - Namespace for secret (required with `--secret`)
+- `--local` - Use local project `.env` (ignored with `--secret`)
+
+**Examples - Non-Secret Environment Variables**:
 ```bash
-# Store a secret
-enact secret set alice/api API_TOKEN
+# Set global environment variable
+enact env set LOG_LEVEL debug
+# ✓ Environment variable 'LOG_LEVEL' set globally.
+#   Location: ~/.enact/.env
 
-# Check existence
-enact secret get alice/api API_TOKEN
+# Set local (project) environment variable
+enact env set LOG_LEVEL debug --local
+# ✓ Environment variable 'LOG_LEVEL' set for project.
+#   Location: .enact/.env
 
-# List secrets for namespace
-enact secret list alice/api
+# Get variable value
+enact env get LOG_LEVEL
+# LOG_LEVEL=debug (from .enact/.env)
 
-# Delete secret
-enact secret delete alice/api API_TOKEN
+# List all environment variables
+enact env list
+# Global (~/.enact/.env):
+#   LOG_LEVEL=info
+#   API_BASE_URL=https://api.example.com
+#
+# Local (.enact/.env):
+#   LOG_LEVEL=debug
+#   API_BASE_URL=https://dev-api.example.com
+#
+# Effective values:
+#   LOG_LEVEL=debug (local override)
+#   API_BASE_URL=https://dev-api.example.com (local override)
 
-# Check resolution for a tool
-enact secret resolve alice/api/slack/notifier
+# Edit environment file
+enact env edit          # Opens ~/.enact/.env
+enact env edit --local  # Opens .enact/.env
+
+# Delete variable
+enact env delete LOG_LEVEL --local
+# ✓ Environment variable 'LOG_LEVEL' removed from .enact/.env
 ```
 
-**Note**: Tools declare required secrets in their manifest. Secrets inherit down namespace paths. Non-secret environment variables are declared separately in the `env` field. See [ENV.md](ENV.md) for details.
+**Examples - Secrets (OS Keyring)**:
+```bash
+# Set a secret (prompts for value)
+enact env set API_TOKEN --secret --namespace alice/api
+# Enter secret value for API_TOKEN: *************
+# ✓ Secret 'API_TOKEN' stored securely in keyring.
+#   Available to: alice/api/*
+
+# Check if secret exists (never prints value)
+enact env get API_TOKEN --secret --namespace alice/api
+# ✓ Secret 'API_TOKEN' exists at alice/api
+
+# List secrets for namespace
+enact env list --secret --namespace alice/api
+# Secrets for alice/api:
+#   API_TOKEN
+#   SLACK_WEBHOOK
+
+# Delete a secret
+enact env delete API_TOKEN --secret --namespace alice/api
+# ✓ Secret 'API_TOKEN' removed from system keyring.
+```
+
+**Examples - Resolution**:
+```bash
+# Show complete environment for a tool
+enact env resolve alice/api/slack/notifier
+
+# Secrets (from keyring):
+#   API_TOKEN      ← alice/api:API_TOKEN ✓
+#   SLACK_WEBHOOK  ← alice/api:SLACK_WEBHOOK ✓
+#
+# Environment Variables:
+#   LOG_LEVEL      ← .enact/.env (local) = debug
+#   API_BASE_URL   ← ~/.enact/.env (global) = https://api.example.com
+#
+# Missing:
+#   ✗ DATABASE_URL (required secret)
+#   To set: enact env set DATABASE_URL --secret --namespace alice/api
+```
+
+**Namespace Inheritance (Secrets)**:
+
+Secrets walk up the tool path to find values:
+```
+Tool: alice/api/slack/notifier
+Needs: API_TOKEN
+
+Lookup:
+  1. alice/api/slack:API_TOKEN
+  2. alice/api:API_TOKEN ✓ found
+  3. alice:API_TOKEN
+```
 
 ---
 
-### 11. config - Configuration
+### 12. config - Configuration
 
 **Purpose**: Manage CLI configuration.
 
@@ -449,7 +632,7 @@ enact config list
 
 ## Utility Commands
 
-### 12. cache - Cache Management
+### 13. cache - Cache Management
 
 **Purpose**: Manage downloaded tool cache.
 
@@ -471,31 +654,34 @@ enact cache info               # Show cache size and stats
 
 ---
 
-### 13. list - List Tools
+### 14. list - List Tools
 
-**Purpose**: List installed local and cached tools.
+**Purpose**: List installed tools.
 
 **Usage**: `enact list [options]`
 
 **Options**:
-- `--user` - Show only user-level tools (from ~/.enact/tools)
-- `--project` - Show only project-level tools (from ./.enact)
-- `--cache` - Show only cached tools
+- `-g, --global` - List global tools (~/.enact/tools/)
+- `-v, --verbose` - Show detailed output including paths
 - `--json` - Output as JSON
+
+**Behavior**:
+- Default: Lists project tools from `.enact/tools/`
+- With `-g`: Lists global tools from `~/.enact/tools/`
 
 **Examples**:
 ```bash
-enact list                     # Show all tools
-enact list --user              # Show only user-level tools
-enact list --project           # Show only project tools
-enact list --cache             # Show only cached tools
+enact list           # List project tools
+enact list -g        # List global tools
+enact list -v        # Show paths
+enact list --json    # Output as JSON
 ```
 
 ---
 
 ## Authentication
 
-### 14. auth - Authentication
+### 15. auth - Authentication
 
 **Purpose**: Manage authentication for publishing and private registries.
 
@@ -505,11 +691,13 @@ enact list --cache             # Show only cached tools
 - `login` - Authenticate via OAuth
 - `logout` - Remove credentials
 - `status` - Show authentication status
+- `whoami` - Show current authenticated user
 
 **Examples**:
 ```bash
 enact auth login
 enact auth status
+enact auth whoami
 enact auth logout
 ```
 
@@ -530,6 +718,11 @@ name: "myorg/utils/my-tool"
 description: "My tool"
 tags: ["utility"]
 command: "echo 'Hello ${name}!'"
+inputSchema:
+  type: object
+  properties:
+    name: { type: string }
+  required: ["name"]
 ---
 
 # My Tool
@@ -631,9 +824,9 @@ my-project/                   # Project directory
 │                   ├── bundle.tar.gz
 │                   ├── .sigstore-bundle
 │                   └── metadata.json
+├── env/                     # Environment variables
+│   └── {org}/{path}/.env
 └── config.yaml              # CLI configuration
-
-# Secrets stored in OS keyring (not on disk)
 ```
 
 ---
@@ -666,13 +859,33 @@ When executing a tool, Enact searches in this order:
 
 ## Exit Codes
 
+Enact uses standardized exit codes following Unix conventions:
+
+### Standard Codes
 - `0` - Success
 - `1` - General error
-- `2` - Validation error
-- `3` - Authentication error
-- `4` - Network error
-- `5` - Signature verification failed
-- `6` - Tool not found
+- `2` - Invalid command line arguments
+
+### BSD sysexits.h Codes (64-78)
+- `65` - Data error (input data was incorrect)
+- `66` - Input file not found or not readable
+- `69` - Service unavailable
+- `70` - Internal software error
+- `74` - I/O error
+- `77` - Permission denied
+- `78` - Configuration error
+
+### Enact-Specific Codes (100-109)
+- `100` - Tool not found
+- `101` - Manifest error (invalid or missing manifest)
+- `102` - Execution error (tool execution failed)
+- `103` - Timeout error
+- `104` - Trust verification failed
+- `105` - Registry error
+- `106` - Authentication error
+- `107` - Validation error
+- `108` - Network error
+- `109` - Container runtime error
 
 ---
 
@@ -707,6 +920,9 @@ When executing a tool, Enact searches in this order:
 | Run custom command | `enact exec org/cat/tool "command"` |
 | Find tools | `enact search "keyword"` |
 | Customize registry tool | `enact install org/cat/tool --global` then edit |
+| Sign tool | `enact sign ./my-tool/` |
 | Publish tool | `enact sign && enact publish` |
+| Report issue | `enact report org/cat/tool --reason "description"` |
 | Check tool trust | `enact trust check org/cat/tool@version` |
 | Clean cache | `enact cache clean` |
+| Check auth status | `enact auth whoami` |

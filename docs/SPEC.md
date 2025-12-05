@@ -29,8 +29,6 @@ enact: "2.0.0"
 env:
   API_TOKEN:
     description: "API Token for the service"
-    source: "Service Dashboard"
-    required: true
     secret: true
 
 # Shared metadata
@@ -62,6 +60,28 @@ A simple tool that greets users by name.
 ## Usage
 
 Provide a name and get a friendly greeting back.
+```
+
+### Example with Build Step
+```markdown
+---
+enact: "2.0.0"
+name: "alice/utils/hello-rust"
+description: "A Rust-based greeting tool"
+from: "rust:1.75-alpine"
+build: "rustc hello.rs -o hello"
+command: "./hello '${name}'"
+inputSchema:
+  type: object
+  properties:
+    name: { type: string }
+  required: ["name"]
+---
+
+# Hello Rust
+
+A greeting tool compiled from Rust source.
+The build step compiles the code and is cached by Dagger.
 ```
 
 ---
@@ -136,7 +156,31 @@ These optional fields should be included in the YAML frontmatter for better tool
 - **Format:** Go duration format
 - **Examples:** `"30s"`, `"5m"`, `"1h"`
 - **Default:** `"30s"`
-- **Notes:** Critical for preventing DoS attacks
+- **Notes:** Critical for preventing DoS attacks. Only applies to command execution, not build steps.
+
+### `build`
+- **Type:** `string` or `array of strings`
+- **Description:** Build command(s) to run before executing the main command
+- **Execution:** Runs outside the timeout, cached by Dagger for fast subsequent runs
+- **Use cases:** Compiling code, installing dependencies, preparing the environment
+- **Examples:**
+  ```yaml
+  # Single build command
+  build: "rustc hello.rs -o hello"
+  
+  # Multiple build commands
+  build:
+    - "npm install"
+    - "npm run build"
+  
+  # Python dependencies
+  build: "pip install -r requirements.txt"
+  ```
+- **Notes:** 
+  - Build steps are cached by Dagger's layer caching
+  - First run may be slow, subsequent runs are instant
+  - Errors during build will fail the tool execution
+  - Use for setup that doesn't need to run every time
 
 ### `version`
 - **Type:** `string`
@@ -188,8 +232,8 @@ These fields define input and output structure in the YAML frontmatter, enabling
         enum: ["summarize", "validate", "transform"]
     required: ["file", "operation"]
   ```
-- **Best Practice:** Always include for container-executed tools
-- **Notes:** Helps AI models use tools correctly
+- **Best Practice:** Always include for container-executed tools that accept arguments.
+- **Notes:** Not required, but highly recommended if the tool takes arguments. Helps AI models use tools correctly.
 
 ### `outputSchema`
 - **Type:** `object` (JSON Schema)
@@ -215,40 +259,132 @@ These fields define input and output structure in the YAML frontmatter, enabling
 
 ---
 
-## Environment Variables
+## Environment Variables and Secrets
 
-Define environment variable requirements in the YAML frontmatter's `env` field.
+Enact provides a unified `env` field for all runtime configuration. The `secret: true` flag determines storage:
+
+1. **Secrets** (`secret: true`) → Stored in OS keyring
+2. **Environment variables** (`secret: false`, default) → Stored in `.env` files
 
 ### `env`
 - **Type:** `object`
 - **Description:** Environment variable configuration for the tool
-- **Package Scope:** Variables are shared across all tools in the same namespace (parent path)
-- **Storage:** `~/.enact/env/{org}/{path}/.env` (namespace-based sharing)
-- **Sharing examples:**
-  - `acme-corp/api/slack-notifier` → `~/.enact/env/acme-corp/api/.env`
-  - `acme-corp/api/discord-bot` → `~/.enact/env/acme-corp/api/.env` (shares with slack-notifier)
-  - `acme-corp/data/processors/csv` → `~/.enact/env/acme-corp/data/processors/.env`
 - **Structure:**
   ```yaml
   env:
     VARIABLE_NAME:
       description: string    # What this variable is for (required)
-      source: string         # Where to get this value (required)
-      required: boolean      # Whether this is required (required)
-      secret: boolean        # Whether this is a secret (optional, default false)
-      default: string        # Default value if not set (optional)
+      secret: boolean        # If true, stored in OS keyring (default: false)
+      default: string        # Default value if not set (optional, non-secrets only)
   ```
-- **Inheritance:** Variables defined in `enact-package.yaml` are merged with tool-specific variables.
+
+### Secret Variables (`secret: true`)
+
+- **Storage:** OS keyring (macOS Keychain, Windows Credential Manager, Linux Secret Service)
+- **Resolution:** Namespace inheritance - walks up the tool path
 - **Example:**
   ```yaml
   env:
-    API_KEY:
-      description: "API key for external service"
-      source: "https://service.com/settings"
-      required: true
+    API_TOKEN:
+      description: "API authentication token"
       secret: true
-      default: "optional-default-value"
+    DATABASE_PASSWORD:
+      description: "Database credentials"
+      secret: true
   ```
+- **Resolution example:**
+  ```
+  Tool: alice/api/slack/notifier
+  Needs: API_TOKEN
+
+  Lookup:
+    1. alice/api/slack:API_TOKEN
+    2. alice/api:API_TOKEN ✓ found
+    3. alice:API_TOKEN
+  ```
+- **Security:** Never written to disk, injected via Dagger's secure secret API
+- **CLI:** `enact env set/get/list/delete --secret --namespace <namespace>`
+
+### Non-Secret Variables (`secret: false` or omitted)
+
+- **Storage:**
+  - Global: `~/.enact/.env`
+  - Local (project): `.enact/.env`
+- **Priority:** Local → Global → Default
+- **Example:**
+  ```yaml
+  env:
+    LOG_LEVEL:
+      description: "Logging verbosity level"
+      default: "info"
+    API_BASE_URL:
+      description: "API endpoint URL"
+      default: "https://api.example.com"
+  ```
+- **Security:** May appear in logs and cache keys
+- **CLI:** `enact env set/get/list/delete/edit [--local]`
+
+### Unified CLI
+
+All environment variables and secrets are managed through a single command:
+
+```bash
+# Non-secrets
+enact env set LOG_LEVEL debug              # Global
+enact env set LOG_LEVEL debug --local      # Project-specific
+
+# Secrets (add --secret --namespace)
+enact env set API_TOKEN --secret --namespace alice/api
+
+# Resolution for a tool
+enact env resolve alice/api/slack/notifier
+```
+
+### Complete Example
+
+```yaml
+env:
+  # Secrets (stored in OS keyring)
+  SLACK_TOKEN:
+    description: "Slack Bot OAuth Token"
+    secret: true
+  
+  # Non-secrets (stored in .env files)
+  SLACK_CHANNEL:
+    description: "Default channel to post to"
+    default: "#general"
+  
+  LOG_LEVEL:
+    description: "Logging verbosity"
+    default: "info"
+```
+
+### Migration from older format
+
+If you have a separate `secrets` array, migrate to the unified `env` structure:
+
+**Old format (deprecated):**
+```yaml
+secrets:
+  - API_KEY
+
+env:
+  LOG_LEVEL:
+    description: "Logging level"
+    default: "info"
+```
+
+**New format:**
+```yaml
+env:
+  API_KEY:
+    description: "API authentication key"
+    secret: true
+  
+  LOG_LEVEL:
+    description: "Logging level"
+    default: "info"
+```
 
 ---
 
@@ -639,18 +775,28 @@ my-project/
 - Created when you run `enact install <tool>` (without --global)
 - Team members can sync via `tools.json`
 
-### Environment Variables
+### Secrets and Environment Variables
+
+**Secrets (OS Keyring):**
+- Stored in OS-native keyring (macOS Keychain, Windows Credential Manager, Linux Secret Service)
+- Service name: `enact-cli`
+- Account format: `{namespace}:{SECRET_NAME}`
+- Resolution: Namespace inheritance (walks up tool path)
+
+**Environment Variables (.env files):**
 ```
-~/.enact/env/
-└── {org}/{namespace-path}/.env      # Shared by namespace
+~/.enact/
+└── .env                              # Global non-secret env vars
+
+project-dir/
+└── .enact/
+    └── .env                          # Local project overrides
 ```
 
-**Examples:**
-```
-~/.enact/env/acme-corp/api/.env                    # Shared by all acme-corp/api/* tools
-~/.enact/env/mycompany/ai/nlp/.env                 # Shared by all mycompany/ai/nlp/* tools
-~/.enact/env/username/utils/.env                   # Shared by all username/utils/* tools
-```
+**Priority order:**
+1. Local project `.env` (`.enact/.env`)
+2. Global user `.env` (`~/.enact/.env`)
+3. Default values from tool manifest
 
 ---
 
@@ -677,15 +823,34 @@ The `command` field uses string interpolation (e.g., `${input}`). While convenie
 Tools often require API keys or credentials. **Never hardcode secrets in `enact.md`.**
 
 **Best Practices:**
-1. **Use Environment Variables:** Declare required secrets in the `env` section without values.
+
+1. **Declare Secrets:** Use `secret: true` in the `env` field:
    ```yaml
    env:
      OPENAI_API_KEY:
-       description: "API Key for OpenAI"
-       required: true
+       description: "OpenAI API key for model access"
+       secret: true
+     DATABASE_PASSWORD:
+       description: "Database credentials"
+       secret: true
    ```
-2. **User Configuration:** Users provide these secrets in their local environment configuration (`~/.enact/env/...`) or at runtime.
-3. **Runtime Injection:** The Enact runtime securely injects these variables into the container environment.
+
+2. **User Storage:** Users set secrets using the unified CLI, which stores them in the OS keyring:
+   ```bash
+   enact env set OPENAI_API_KEY --secret --namespace alice/api
+   ```
+
+3. **Namespace Inheritance:** Secrets are shared across all tools in a namespace (e.g., `alice/api/*` shares `alice/api:OPENAI_API_KEY`).
+
+4. **Runtime Injection:** Secrets are loaded from the keyring and injected securely via Dagger's secret API - never written to disk.
+
+5. **Non-Sensitive Config:** Omit `secret` (or set to `false`) for configuration that can be stored in `.env` files:
+   ```yaml
+   env:
+     LOG_LEVEL:
+       description: "Logging verbosity"
+       default: "info"
+   ```
 
 ---
 
