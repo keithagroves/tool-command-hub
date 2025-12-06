@@ -1,4 +1,5 @@
 import { ArrowRight, Code, Shield, Search, Package, Zap, Github, MessageCircle, Book, Mail, Menu, X, Copy, Check } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -87,7 +88,7 @@ A simple tool that says hello world.`;
             <div className="hidden md:flex items-center space-x-6">
               <a href="#features" className="text-white/70 hover:text-cyan-400 transition-colors">Features</a>
               <a href="#examples" className="text-white/70 hover:text-cyan-400 transition-colors">Examples</a>
-              <a href="/docs" className="text-white/70 hover:text-cyan-400 transition-colors">Docs</a>
+              <Link to="/docs" className="text-white/70 hover:text-cyan-400 transition-colors">Docs</Link>
               <Button
                 onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
                 variant="outline" 
@@ -126,13 +127,13 @@ A simple tool that says hello world.`;
                 >
                   Examples
                 </a>
-                <a 
-                  href="/docs" 
+                <Link 
+                  to="/docs" 
                   className="text-white/70 hover:text-cyan-400 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Docs
-                </a>
+                </Link>
                 <Button
                   onClick={() => window.open('https://github.com/EnactProtocol/encat-spec-and-tools', '_blank')}
                   variant="outline" 
