@@ -20,7 +20,7 @@ The server exposes a set of "Meta-Tools" for managing the Enact environment:
 
 This is the core power of Enact MCP. Any tool installed in your environment is **automatically projected** as a first-class MCP tool.
 
-The Enact MCP server reads the `input` schema from `enact.md` and converts it to an MCP Tool Schema on the fly.
+The Enact MCP server reads the `input` schema from `SKILL.md` and converts it to an MCP Tool Schema on the fly.
 
 **Example:**
 If you have `my-org/utils/weather` installed, the Agent sees:
@@ -51,7 +51,7 @@ When the Agent calls this tool, Enact automatically translates it to:
 ### `enact_inspect`
 
   * **Agent Intent:** "How does this tool work?" or "Read the documentation."
-  * **Behavior:** Returns the parsed `enact.md`.
+  * **Behavior:** Returns the parsed `SKILL.md`.
       * For **Container Tools**, it returns the input schema and description.
       * For **LLM Tools**, it returns the Markdown body (instructions) so the Agent can internalize the logic before execution.
 

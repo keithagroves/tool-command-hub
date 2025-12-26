@@ -8,7 +8,7 @@ This document outlines planned features and improvements for the Enact Protocol 
 **Goal:** Allow tools to define sidecar containers for integration testing or full-stack environments.
 
 **Proposed Specification:**
-Add a `services` field to the `enact.md` YAML frontmatter.
+Add a `services` field to the `SKILL.md` YAML frontmatter.
 
 ```yaml
 services:
@@ -26,7 +26,7 @@ services:
 **Goal:** Provide cryptographic guarantees against data exfiltration for sensitive tools.
 
 **Proposed Specification:**
-Add a `network` field to the `enact.md` YAML frontmatter.
+Add a `network` field to the `SKILL.md` YAML frontmatter.
 
 ```yaml
 # Default: true (or based on policy)
@@ -63,7 +63,7 @@ network: false
 `enact debug <tool>`
 
 **Behavior:**
-1. Builds the container environment as defined in `enact.md`.
+1. Builds the container environment as defined in `SKILL.md`.
 2. Mounts all inputs and sources.
 3. Drops the user into an interactive shell *inside* the container before the main command runs.
 
@@ -82,7 +82,7 @@ Leverage Dagger's cross-platform build capabilities during `enact publish` to ve
 `enact test <tool>`
 
 **Behavior:**
-Automatically executes the scenarios defined in the `examples` field of `enact.md` and asserts that the output matches the expected result.
+Automatically executes the scenarios defined in the `examples` field of `SKILL.md` and asserts that the output matches the expected result.
 
 ## 4. Cryptographic Publisher Signatures (Future)
 

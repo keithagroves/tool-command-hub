@@ -171,9 +171,7 @@ A simple tool that says hello world.`;
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
 
-            <Button onClick={() => {
-    document.getElementById('signup')?.scrollIntoView({ behavior: 'smooth' });
-  }} size="lg" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0">
+            <Button onClick={() => window.open('https://enact.tools', '_blank')} size="lg" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0">
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
@@ -191,7 +189,7 @@ A simple tool that says hello world.`;
           {/* Typewriter YAML Example */}
           <TypewriterCode
             code={yamlCode}
-            title="enact.md"
+            title="SKILL.md"
             badge="One file!"
           />
           <p className="text-white/60 mt-4 text-sm">
@@ -303,7 +301,7 @@ A simple tool that says hello world.`;
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Define</h3>
               <p className="text-white/70">
-                Create an enact.md file with YAML frontmatter and markdown documentation.
+                Create a SKILL.md file with YAML frontmatter and markdown documentation.
               </p>
             </div>
 
@@ -352,7 +350,7 @@ A simple tool that says hello world.`;
                 <CardContent>
                   <pre className="text-white/90 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
 {`csv-processor/
-├── enact.md            # Tool definition & docs
+├── SKILL.md            # Tool definition & docs
 ├── src/
 │   ├── process.py      # Main entry point
 │   ├── validate.py     # Validation logic
@@ -703,13 +701,13 @@ See [BRAND_GUIDE.md](BRAND_GUIDE.md) for details.`}
                   </div>
 
                   <div className="mb-3">
-                    <span className="text-green-400"># Edit enact.md with your tool definition</span>
+                    <span className="text-green-400"># Edit SKILL.md with your tool definition</span>
                   </div>
                   <div className="mb-1">
                     <span className="text-purple-400">$</span> <span className="text-cyan-300">cd username-utils-greeter</span>
                   </div>
                   <div className="mb-4">
-                    <span className="text-purple-400">$</span> <span className="text-cyan-300">vim enact.md</span>
+                    <span className="text-purple-400">$</span> <span className="text-cyan-300">vim SKILL.md</span>
                   </div>
 
                   <div className="mb-3">
