@@ -7,7 +7,7 @@ This document provides a comprehensive reference for all Enact protocol fields u
 
 ## Overview
 
-All Enact tools are defined in a single **`enact.md`** file that combines:
+All Enact tools are defined in a single **`SKILL.md`** file that combines:
 
 1. **YAML frontmatter** — Machine-readable metadata (fields documented below)
 2. **Markdown body** — Human-readable documentation and instructions
@@ -88,7 +88,7 @@ The build step compiles the code and is cached by Dagger.
 
 ## Required Fields
 
-These fields must be present in the YAML frontmatter of every `enact.md` file.
+These fields must be present in the YAML frontmatter of every `SKILL.md` file.
 
 ### `name`
 - **Type:** `string`
@@ -480,7 +480,7 @@ Additional metadata fields in the YAML frontmatter for richer tool documentation
 - **Type:** `string`
 - **Description:** Extended Markdown documentation for the tool (YAML frontmatter field)
 - **Format:** Markdown
-- **Best Practice:** Keep brief in YAML frontmatter; use the Markdown body section of `enact.md` for extensive documentation, or `RESOURCES.md` for progressive disclosure
+- **Best Practice:** Keep brief in YAML frontmatter; use the Markdown body section of `SKILL.md` for extensive documentation, or `RESOURCES.md` for progressive disclosure
 
 ### `authors`
 - **Type:** `array of objects`
@@ -612,7 +612,7 @@ When publishing tools, Sigstore signs the **entire tool bundle** (tarball). The 
 
 **What gets signed:**
 - The complete tarball (`.tar.gz`) containing:
-  - Tool definition file (`enact.md` with YAML frontmatter + Markdown documentation)
+  - Tool definition file (`SKILL.md` with YAML frontmatter + Markdown documentation)
   - Source code and dependencies
   - Additional documentation files (e.g., `RESOURCES.md`)
   - All resources
@@ -624,14 +624,14 @@ When publishing tools, Sigstore signs the **entire tool bundle** (tarball). The 
 
 **What is NOT signed in the metadata:**
 - Signatures are stored separately in `.sigstore-bundle` files
-- The `enact.md` file does not contain signature fields
+- The `SKILL.md` file does not contain signature fields
 - This keeps the tool definition clean and focused on functionality
 
 **Example:**
 ```bash
 # Tool structure
 my-tool/
-├── enact.md           # Tool definition (YAML frontmatter + Markdown docs)
+├── SKILL.md           # Tool definition (YAML frontmatter + Markdown docs)
 ├── src/               # Source code
 └── RESOURCES.md       # Additional documentation (optional, for progressive disclosure)
 
@@ -642,9 +642,9 @@ my-tool.sigstore-bundle         # Signature + certificate + Rekor proof
 
 ---
 
-## File Format: `enact.md`
+## File Format: `SKILL.md`
 
-All Enact tools are defined in a single **`enact.md`** file — a Markdown document with YAML frontmatter.
+All Enact tools are defined in a single **`SKILL.md`** file — a Markdown document with YAML frontmatter.
 
 ### Structure
 - **YAML frontmatter** (between `---` delimiters) contains structured tool metadata
@@ -685,7 +685,7 @@ The presence of a `command` field in the YAML frontmatter determines execution:
 
 ## Tool Types
 
-Both tool types are defined in `enact.md` files — the presence of a `command` field determines the execution model.
+Both tool types are defined in `SKILL.md` files — the presence of a `command` field determines the execution model.
 
 ### Container-Executed Tools
 - **Has:** `command` field in YAML frontmatter
@@ -711,7 +711,7 @@ Both tool types are defined in `enact.md` files — the presence of a `command` 
     └── {path}/                      # Arbitrary depth hierarchy (like Java packages)
         └── {to}/
             └── {tool}/
-                ├── enact.md         # Tool definition
+                ├── SKILL.md         # Tool definition
                 ├── src/             # Built source code (if any)
                 ├── dist/            # Compiled output (if any)
                 ├── node_modules/    # Dependencies (if any)
@@ -766,7 +766,7 @@ my-project/
 │   └── {org}/
 │       └── {path}/
 │           └── {tool}/
-│               ├── enact.md
+│               ├── SKILL.md
 │               └── ...
 ```
 
@@ -820,7 +820,7 @@ The `command` field uses string interpolation (e.g., `${input}`). While convenie
 3. **Quote Arguments:** If you must use interpolation, always wrap variables in single quotes: `'${variable}'`.
 
 ### Secret Management
-Tools often require API keys or credentials. **Never hardcode secrets in `enact.md`.**
+Tools often require API keys or credentials. **Never hardcode secrets in `SKILL.md`.**
 
 **Best Practices:**
 

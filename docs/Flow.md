@@ -336,7 +336,7 @@ Install:  enact install alice/pdf-extract
 │
 ├── tools/
 │   └── alice/pdf-extract/          # Active installation
-│       ├── enact.md                # Manifest (or enact.yaml)
+│       ├── SKILL.md                # Manifest (or enact.yaml)
 │       ├── extract.py              # Tool code
 │       └── requirements.txt        # Dependencies
 │
@@ -398,7 +398,7 @@ Trust check:
    │                │ └────────────────────────────────┘       │
    │                │                    │                     │
    │                │ ┌────────────────────────────────┐       │
-   │                │ │ Parse enact.md (or enact.yaml) │       │
+   │                │ │ Parse SKILL.md (or enact.yaml) │       │
    │                │ │ - from: python:3.11-slim       │       │
    │                │ │ - command: python extract.py   │       │
    │                │ │ - inputSchema: {...}           │       │
@@ -460,7 +460,7 @@ Trust check:
 | Step | Action | Details |
 |------|--------|---------|
 | 1 | **Resolve path** | Project `.enact/tools/` → User `~/.enact/tools/` → Cache |
-| 2 | **Parse manifest** | Read `enact.md` YAML frontmatter (or `enact.yaml`) |
+| 2 | **Parse manifest** | Read `SKILL.md` YAML frontmatter (or `enact.yaml`) |
 | 3 | **Validate inputs** | Check against `inputSchema` using JSON Schema |
 | 4 | **Load secrets** | `env` entries with `secret: true` from OS keyring |
 | 5 | **Load env vars** | `env` entries without `secret` from `.env` files |
@@ -479,7 +479,7 @@ Trust check:
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
 │  /workspace/                                            │
-│  ├── enact.md           <- Tool manifest                │
+│  ├── SKILL.md           <- Tool manifest                │
 │  ├── extract.py         <- Tool code                    │
 │  ├── requirements.txt   <- Dependencies                 │
 │  └── report.pdf         <- User's input file            │
@@ -535,7 +535,7 @@ alice/greeter v2.1.0
 # Greeter Tool
 
 This is a simple greeting tool that demonstrates
-the enact.md format.
+the SKILL.md format.
 
 ## Usage
 

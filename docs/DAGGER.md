@@ -11,11 +11,11 @@ Enact's promise of "publish once, run anywhere" relies on Dagger's core capabili
 1.  **Abstract the Environment:** Tools run in containers defined by code, ensuring they work identically on macOS, Linux, and Windows.
 2.  **Guarantee Determinism:** Dagger uses a Directed Acyclic Graph (DAG) where every step is content-addressed. If the inputs (files, args, container hash) are the same, the output is guaranteed to be the same.
 3.  **Smart Caching:** Dagger caches every operation. If you run a tool twice with the same inputs, the second run is instant because Dagger returns the cached result.
-4.  **Programmatic Control:** Unlike static Dockerfiles, Dagger allows Enact to dynamically construct execution pipelines based on the `enact.md` configuration.
+4.  **Programmatic Control:** Unlike static Dockerfiles, Dagger allows Enact to dynamically construct execution pipelines based on the `SKILL.md` configuration.
 
 ## How Enact Maps to Dagger
 
-When you execute `enact run tool`, the CLI translates the `enact.md` manifest into a Dagger pipeline on the fly.
+When you execute `enact run tool`, the CLI translates the `SKILL.md` manifest into a Dagger pipeline on the fly.
 
 | Enact Manifest Field | Dagger API Equivalent | Description |
 | :--- | :--- | :--- |
@@ -27,7 +27,7 @@ When you execute `enact run tool`, the CLI translates the `enact.md` manifest in
 
 ## Execution Flow
 
-1.  **Parse:** The Enact CLI reads `enact.md` and validates the input arguments against the `inputSchema`.
+1.  **Parse:** The Enact CLI reads `SKILL.md` and validates the input arguments against the `inputSchema`.
 2.  **Connect:** Enact connects to the local Dagger Engine (automatically starting it if necessary).
 3.  **Construct:** A Dagger graph is built programmatically:
     *   **Base:** Pull the image specified in `from`.
@@ -57,7 +57,7 @@ enact exec alice/utils/greeter "/bin/sh"
 ```
 
 Enact instructs Dagger to:
-1.  Build the container environment exactly as defined in `enact.md`.
+1.  Build the container environment exactly as defined in `SKILL.md`.
 2.  Mount all sources and inputs.
 3.  **Instead of running the defined command**, it opens an interactive terminal session inside that container.
 

@@ -857,7 +857,7 @@ bundles/
 The `.tar.gz` bundle contains:
 ```
 greeter-1.2.0/
-├── enact.md          # Manifest file
+├── SKILL.md          # Manifest file
 ├── index.js          # Tool code
 ├── package.json      # Dependencies (if applicable)
 └── README.md         # Documentation

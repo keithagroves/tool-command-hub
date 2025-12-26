@@ -308,7 +308,7 @@ enact publish ./my-tool/
 
 **Returns**:
 - Tool metadata (name, description, tags)
-- Full instructions from enact.md
+- Full instructions from SKILL.md
 - Input/output schemas
 - Whether tool is executable (has `command` field)
 
@@ -710,8 +710,8 @@ enact auth logout
 # 1. Create tool in project directory
 cd my-tool-project
 
-# 2. Create enact.md
-cat > enact.md <<'EOF'
+# 2. Create SKILL.md
+cat > SKILL.md <<'EOF'
 ---
 enact: "2.0.0"
 name: "myorg/utils/my-tool"
@@ -813,7 +813,7 @@ my-project/                   # Project directory
 │   └── {org}/
 │       └── {path}/
 │           └── {tool}/
-│               ├── enact.md
+│               ├── SKILL.md
 │               ├── src/
 │               └── node_modules/
 ├── cache/                   # Immutable versioned bundles (auto-managed)
